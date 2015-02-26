@@ -1,10 +1,17 @@
 package eu.thog92.thaumicthings.blocks;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import eu.thog92.thaumicthings.ClientProxy;
+import eu.thog92.thaumicthings.tileentity.TileEntityExtraLifter;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import thaumcraft.common.Thaumcraft;
 
@@ -13,12 +20,7 @@ import java.util.Random;
 /**
  * Created by thog on 2/26/15.
  */
-public class BlockExtraLifter extends BlockMagic {
-
-    private IIcon iconTop;
-    private IIcon iconBottom;
-    private IIcon iconSide;
-    private IIcon iconGlow;
+public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider {
 
     public BlockExtraLifter() {
         super(Material.wood, "blockExtraLifter");
@@ -27,6 +29,7 @@ public class BlockExtraLifter extends BlockMagic {
         this.setResistance(15.0F);
         this.setStepSound(soundTypeWood);
         this.setCreativeTab(Thaumcraft.tabTC);
+        GameRegistry.registerTileEntity(TileEntityExtraLifter.class, "TileEntityExtraLifter");
     }
 
     @SideOnly(Side.CLIENT)
@@ -75,5 +78,9 @@ public class BlockExtraLifter extends BlockMagic {
         return this.getTexture(2);
     }
 
+    @Override
+    public TileEntity createNewTileEntity(World world, int metadata) {
+        return new TileEntityExtraLifter();
+    }
 
 }
