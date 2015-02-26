@@ -1,0 +1,16 @@
+[
+{
+  "modid": "thaumicthings",
+  "name": "Thaumic Things",
+  "description": "A mod with things that I needed",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Thog"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
