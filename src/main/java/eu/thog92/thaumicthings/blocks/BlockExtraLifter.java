@@ -31,7 +31,7 @@ public class BlockExtraLifter extends BlockMagic {
 
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        return this.getTexture(side);
+        return this.getTextureForRender(side);
     }
 
 
@@ -42,13 +42,13 @@ public class BlockExtraLifter extends BlockMagic {
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getTexture(int side)
+    public IIcon getTextureForRender(int side)
     {
         IIcon texture;
         if(side == 3)
             texture = this.getDefaultTexture();
         else
-            texture = super.getTexture(side);
+            texture = super.getTextureForRender(side);
 
         return texture;
     }
@@ -72,7 +72,7 @@ public class BlockExtraLifter extends BlockMagic {
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getDefaultTexture() {
-        return this.textures.get(2);
+        return this.getTexture(2);
     }
 
 

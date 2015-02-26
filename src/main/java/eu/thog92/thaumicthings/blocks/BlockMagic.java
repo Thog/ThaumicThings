@@ -14,7 +14,7 @@ import java.util.List;
 public class BlockMagic extends Block {
 
     @SideOnly(Side.CLIENT)
-    protected List<IIcon> textures;
+    private List<IIcon> textures;
     private String[] strTextures;
 
     public BlockMagic(Material material, String name) {
@@ -24,15 +24,21 @@ public class BlockMagic extends Block {
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getTexture(int side)
+    public IIcon getTextureForRender(int side)
     {
         IIcon texture;
         if(side >= this.textures.size())
             texture = this.getDefaultTexture();
         else
-            texture = this.textures.get(side);
+            texture = this.getTexture(side);
 
         return texture;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public IIcon getTexture(int side)
+    {
+        return this.textures.get(side);
     }
 
     public void setTextures(String... strTextures)

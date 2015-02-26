@@ -43,29 +43,29 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
-        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, block.getTexture(0));
+        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(0));
         tessellator.draw();
 
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, block.getTexture(1));
+        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(1));
         tessellator.draw();
 
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, block.getTexture(2));
+        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(2));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, -1.0F);
-        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, block.getTexture(3));
+        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(3));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
-        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, block.getTexture(4));
+        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(4));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, block.getTexture(5));
+        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(5));
         tessellator.draw();
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
@@ -102,7 +102,7 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
     }
 
 
-    public int defineBrightness(IBlockAccess blockAccess, int x, int y, int z, Block block) {
+    public int getBrightness(IBlockAccess blockAccess, int x, int y, int z, Block block) {
 
         int mb = block.getMixedBrightnessForBlock(blockAccess, x, y, z);
         tessellator.setBrightness(mb);
