@@ -16,7 +16,8 @@ public class ThaumicThings
     public static CommonProxy proxy;
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event)
+    {
         proxy.initContents();
         proxy.registerRenders();
     }

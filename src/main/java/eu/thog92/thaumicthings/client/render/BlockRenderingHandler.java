@@ -13,7 +13,8 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by thog on 2/26/15.
  */
-public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHandler {
+public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHandler
+{
 
     protected Tessellator tessellator;
 
@@ -23,15 +24,17 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
     }
 
     @Override
-    public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
+    public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
+    {
         this.tessellator = Tessellator.instance;
-        this.renderInventoryBlock((BlockMagic)block, metadata, modelId, renderer);
+        this.renderInventoryBlock((BlockMagic) block, metadata, modelId, renderer);
     }
 
     @Override
-    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+    {
         this.tessellator = Tessellator.instance;
-        return renderWorldBlock(world, x, y, z, (BlockMagic)block, modelId, renderer);
+        return renderWorldBlock(world, x, y, z, (BlockMagic) block, modelId, renderer);
     }
 
     public abstract boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, BlockMagic block, int modelId, RenderBlocks renderer);
@@ -39,7 +42,8 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
     public abstract void renderInventoryBlock(BlockMagic block, int metadata, int modelId, RenderBlocks renderer);
 
 
-    public void drawQuadsWithBlock(RenderBlocks renderer, BlockMagic block) {
+    public void drawQuadsWithBlock(RenderBlocks renderer, BlockMagic block)
+    {
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
@@ -70,7 +74,8 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    public void drawAllCube(RenderBlocks renderer, BlockMagic block, IIcon texture) {
+    public void drawAllCube(RenderBlocks renderer, BlockMagic block, IIcon texture)
+    {
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
@@ -102,16 +107,18 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
     }
 
 
-    public int getBrightness(IBlockAccess blockAccess, int x, int y, int z, Block block) {
+    public int getBrightness(IBlockAccess blockAccess, int x, int y, int z, Block block)
+    {
 
         int mb = block.getMixedBrightnessForBlock(blockAccess, x, y, z);
         tessellator.setBrightness(mb);
         float f = 1.0F;
         int l = block.colorMultiplier(blockAccess, x, y, z);
-        float f1 = (float)(l >> 16 & 255) / 255.0F;
-        float f2 = (float)(l >> 8 & 255) / 255.0F;
-        float f3 = (float)(l & 255) / 255.0F;
-        if(EntityRenderer.anaglyphEnable) {
+        float f1 = (float) (l >> 16 & 255) / 255.0F;
+        float f2 = (float) (l >> 8 & 255) / 255.0F;
+        float f3 = (float) (l & 255) / 255.0F;
+        if (EntityRenderer.anaglyphEnable)
+        {
             float f6 = (f1 * 30.0F + f2 * 59.0F + f3 * 11.0F) / 100.0F;
             float f4 = (f1 * 30.0F + f2 * 70.0F) / 100.0F;
             float f7 = (f1 * 30.0F + f3 * 70.0F) / 100.0F;

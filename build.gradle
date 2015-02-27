@@ -29,7 +29,7 @@ repositories {
 }
 
 version = "0.0.1"
-group= "eu.thog92.thaumicthings"
+group = "eu.thog92.thaumicthings"
 archivesBaseName = "thaumicthings"
 
 minecraft {
@@ -39,21 +39,21 @@ minecraft {
 
 
 dependencies {
-    compile name: "Baubles" , version: "1.7.10-1.0.1.10", classifier: "deobf"
-    compile name: "Thaumcraft" , version: "1.7.10-4.2.3.5", classifier: "deobf"
+    compile name: "Baubles", version: "1.7.10-1.0.1.10", classifier: "deobf"
+    compile name: "Thaumcraft", version: "1.7.10-4.2.3.5", classifier: "deobf"
 }
 
 processResources
-{
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+        {
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
+                expand 'version': project.version, 'mcversion': project.minecraft.version
+            }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }

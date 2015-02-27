@@ -3,7 +3,8 @@ package eu.thog92.thaumicthings;
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import net.minecraft.block.Block;
 
-public class CommonProxy {
+public class CommonProxy
+{
 
     public Block extraLifter;
 
