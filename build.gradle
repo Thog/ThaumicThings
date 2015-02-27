@@ -28,19 +28,21 @@ repositories {
     }
 }
 
-version = "0.0.1"
+version = modVersion
 group = "eu.thog92.thaumicthings"
 archivesBaseName = "thaumicthings"
 
+if (System.env.BUILD_NUMBER != null) version = "$version.$System.env.BUILD_NUMBER"
+
 minecraft {
-    version = "1.7.10-10.13.2.1307-1.7.10"
+    version = "${mcVersion}-latest"
     runDir = "run"
 }
 
 
 dependencies {
-    compile name: "Baubles", version: "1.7.10-1.0.1.10", classifier: "deobf"
-    compile name: "Thaumcraft", version: "1.7.10-4.2.3.5", classifier: "deobf"
+    compile name: "Baubles", version: baublesVersion, classifier: "deobf"
+    compile name: "Thaumcraft", version: thaumcraftVersion, classifier: "deobf"
 }
 
 processResources
