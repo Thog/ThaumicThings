@@ -17,4 +17,10 @@ public class CommonProxy
     {
         extraLifter = new BlockExtraLifter();
     }
+
+    public void sparkle(float x, float y, float z, float size, int color,
+            float gravity, double motionX, double motionY, double motionZ)
+    {
+        
+    }
 }

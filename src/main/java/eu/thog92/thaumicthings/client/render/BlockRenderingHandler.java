@@ -42,34 +42,34 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
     public abstract void renderInventoryBlock(BlockMagic block, int metadata, int modelId, RenderBlocks renderer);
 
 
-    public void drawQuadsWithBlock(RenderBlocks renderer, BlockMagic block)
+    public void drawQuadsWithBlock(RenderBlocks renderer, BlockMagic block, int metadata)
     {
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
-        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(0));
+        renderer.renderFaceYNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(0, metadata));
         tessellator.draw();
 
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 1.0F, 0.0F);
-        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(1));
+        renderer.renderFaceYPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(1, metadata));
         tessellator.draw();
 
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(2));
+        renderer.renderFaceXNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(2, metadata));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, -1.0F);
-        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(3));
+        renderer.renderFaceXPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(3, metadata));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
-        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(4));
+        renderer.renderFaceZNeg(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(4, metadata));
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(5));
+        renderer.renderFaceZPos(block, 0.0D, 0.0D, 0.0D, block.getTextureForRender(5, metadata));
         tessellator.draw();
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }

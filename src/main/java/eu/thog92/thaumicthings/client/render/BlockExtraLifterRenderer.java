@@ -29,42 +29,217 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, BlockMagic block, int modelId, RenderBlocks renderer)
     {
+        GL11.glPushMatrix();
+
         block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         renderer.setRenderBoundsFromBlock(block);
+        
+        int metadata = world.getBlockMetadata(x, y, z);
+        
+        if(metadata == 2 || metadata == 3)
+        {
+            renderer.uvRotateBottom = 1;
+            renderer.uvRotateTop = 1;
+        }
+        else if(metadata == 4)
+        {
+            renderer.uvRotateBottom = 3;
+            renderer.uvRotateTop = 3;
+        }
+        
         renderer.renderStandardBlock(block, x, y, z);
-
 
         //TODO: TileEntity
         int brightness = 180;
 
         // Liquids render
-        tessellator.setColorOpaque_I(40960);
-
         tessellator.setBrightness(brightness);
-        if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
+        if(metadata == 0)
         {
-            renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 0.01F), (double) z, block.getTexture(3));
-        }
+            tessellator.setColorOpaque_I(40960);
 
-        tessellator.setColorOpaque_I(14488063);
-        if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
-        {
-            renderer.renderFaceXPos(block, (double) ((float) x - 0.01F), (double) y, (double) z, block.getTexture(3));
-        }
+            renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
 
-        if (block.shouldSideBeRendered(world, x - 1, y, z, 6))
-        {
-            renderer.renderFaceXNeg(block, (double) ((float) x + 0.01F), (double) y, (double) z, block.getTexture(3));
-        }
+            if (block.shouldSideBeRendered(world, x, y +1, z, 6))
+            {
 
-        if (block.shouldSideBeRendered(world, x, y, z + 1, 6))
-        {
-            renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
-        }
+            }
 
-        if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            tessellator.setColorOpaque_I(14488063);
+            if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
+            {
+                renderer.renderFaceXPos(block, (double) ((float) x - 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x - 1, y, z, 6))
+            {
+                renderer.renderFaceXNeg(block, (double) ((float) x + 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y, z + 1, 6))
+            {
+                renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
+            }
+        }
+        else if(metadata == 2)
         {
-            renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
+            tessellator.setColorOpaque_I(40960);
+
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
+            }
+
+
+            tessellator.setColorOpaque_I(14488063);
+            if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
+            {
+                renderer.renderFaceXPos(block, (double) ((float) x - 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x - 1, y, z, 6))
+            {
+                renderer.renderFaceXNeg(block, (double) ((float) x + 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
+            {
+                renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 0.01F), (double) z, block.getTexture(3));
+            }
+            if (block.shouldSideBeRendered(world, x, y - 1, z, 6))
+            {
+                renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
+            }
+
+        }
+        
+        else if(metadata == 3)
+        {
+            tessellator.setColorOpaque_I(40960);
+
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
+            }
+
+
+            tessellator.setColorOpaque_I(14488063);
+            if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
+            {
+                renderer.renderFaceXPos(block, (double) ((float) x - 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x - 1, y, z, 6))
+            {
+                renderer.renderFaceXNeg(block, (double) ((float) x + 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
+            {
+                renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 0.01F), (double) z, block.getTexture(3));
+            }
+            if (block.shouldSideBeRendered(world, x, y - 1, z, 6))
+            {
+                renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
+            }
+        }
+        
+        else if(metadata == 4)
+        {
+            tessellator.setColorOpaque_I(40960);
+
+            if (block.shouldSideBeRendered(world, x - 1, y, z, 6))
+            {
+                renderer.renderFaceXNeg(block, (double) ((float) x + 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+
+            tessellator.setColorOpaque_I(14488063);
+            
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
+            {
+                renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 0.01F), (double) z, block.getTexture(3));
+            }
+            if (block.shouldSideBeRendered(world, x, y - 1, z, 6))
+            {
+                renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
+            }
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
+            }
+            
+        }
+        else if(metadata == 5)
+        {
+            tessellator.setColorOpaque_I(40960);
+
+            if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
+            {
+                renderer.renderFaceXPos(block, (double) ((float) x - 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+
+            tessellator.setColorOpaque_I(14488063);
+            
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
+            {
+                renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 0.01F), (double) z, block.getTexture(3));
+            }
+            if (block.shouldSideBeRendered(world, x, y - 1, z, 6))
+            {
+                renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
+            }
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
+            }
+        }
+        
+        else
+        {
+            tessellator.setColorOpaque_I(40960);
+
+            if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
+            {
+                renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 0.01F), (double) z, block.getTexture(3));
+            }
+
+            tessellator.setColorOpaque_I(14488063);
+            if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
+            {
+                renderer.renderFaceXPos(block, (double) ((float) x - 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x - 1, y, z, 6))
+            {
+                renderer.renderFaceXNeg(block, (double) ((float) x + 0.01F), (double) y, (double) z, block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y, z + 1, 6))
+            {
+                renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
+            }
+
+            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            {
+                renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
+            }
         }
 
         // Clean and restore default blockbounds
@@ -72,6 +247,8 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
         block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         renderer.setRenderBoundsFromBlock(block);
 
+
+        GL11.glPopMatrix();
         return true;
     }
 
@@ -80,7 +257,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
     {
         block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         renderer.setRenderBoundsFromBlock(block);
-        this.drawQuadsWithBlock(renderer, block);
+        this.drawQuadsWithBlock(renderer, block, 1);
         Color color = new Color(40960); // Default Thaumcraft Color
         GL11.glColor3f((float) color.getRed() / 255.0F, (float) color.getGreen() / 255.0F, (float) color.getBlue() / 255.0F);
         block.setBlockBounds(0.01F, 0.9F, 0.01F, 0.99F, 0.99F, 0.99F);

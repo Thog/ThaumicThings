@@ -26,7 +26,7 @@ public class BlockMagic extends Block
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getTextureForRender(int side)
+    public IIcon getTextureForRender(int side, int metadata)
     {
         IIcon texture;
         if (side >= this.textures.size())
