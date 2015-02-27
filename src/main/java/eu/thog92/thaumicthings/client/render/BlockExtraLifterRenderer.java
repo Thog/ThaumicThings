@@ -33,20 +33,19 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
 
         block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         renderer.setRenderBoundsFromBlock(block);
-        
+
         int metadata = world.getBlockMetadata(x, y, z);
-        
-        if(metadata == 2 || metadata == 3)
+
+        if (metadata == 2 || metadata == 3)
         {
             renderer.uvRotateBottom = 1;
             renderer.uvRotateTop = 1;
-        }
-        else if(metadata == 4)
+        } else if (metadata == 4)
         {
             renderer.uvRotateBottom = 3;
             renderer.uvRotateTop = 3;
         }
-        
+
         renderer.renderStandardBlock(block, x, y, z);
 
         //TODO: TileEntity
@@ -54,13 +53,13 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
 
         // Liquids render
         tessellator.setBrightness(brightness);
-        if(metadata == 0)
+        if (metadata == 0)
         {
             tessellator.setColorOpaque_I(40960);
 
             renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
 
-            if (block.shouldSideBeRendered(world, x, y +1, z, 6))
+            if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
             {
 
             }
@@ -85,8 +84,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             {
                 renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
             }
-        }
-        else if(metadata == 2)
+        } else if (metadata == 2)
         {
             tessellator.setColorOpaque_I(40960);
 
@@ -116,13 +114,11 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
                 renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
             }
 
-        }
-        
-        else if(metadata == 3)
+        } else if (metadata == 3)
         {
             tessellator.setColorOpaque_I(40960);
 
-            if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
+            if (block.shouldSideBeRendered(world, x, y, z +1, 6))
             {
                 renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
             }
@@ -147,9 +143,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             {
                 renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
             }
-        }
-        
-        else if(metadata == 4)
+        } else if (metadata == 4)
         {
             tessellator.setColorOpaque_I(40960);
 
@@ -160,7 +154,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
 
 
             tessellator.setColorOpaque_I(14488063);
-            
+
             if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
             {
                 renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
@@ -178,9 +172,8 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             {
                 renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
             }
-            
-        }
-        else if(metadata == 5)
+
+        } else if (metadata == 5)
         {
             tessellator.setColorOpaque_I(40960);
 
@@ -191,7 +184,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
 
 
             tessellator.setColorOpaque_I(14488063);
-            
+
             if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
             {
                 renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
@@ -209,9 +202,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             {
                 renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
             }
-        }
-        
-        else
+        } else
         {
             tessellator.setColorOpaque_I(40960);
 

@@ -25,6 +25,6 @@ public class ThaumicThings
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-
+        proxy.initTiles();
     }
 }

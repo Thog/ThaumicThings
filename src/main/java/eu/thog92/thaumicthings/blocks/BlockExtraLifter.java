@@ -1,6 +1,5 @@
 package eu.thog92.thaumicthings.blocks;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import eu.thog92.thaumicthings.ClientProxy;
@@ -32,7 +31,6 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
         this.setResistance(15.0F);
         this.setStepSound(soundTypeWood);
         this.setCreativeTab(Thaumcraft.tabTC);
-        GameRegistry.registerTileEntity(TileEntityExtraLifter.class, "TileEntityExtraLifter");
     }
 
     @SideOnly(Side.CLIENT)
@@ -49,17 +47,17 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     {
         //TileEntity tile = world.getTileEntity(x, y, z);
         int metadata = world.getBlockMetadata(x, y, z);
-        if(metadata == 0)
+        if (metadata == 0)
             ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) y, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0.3F, 0, 0, 0);
-        else if(metadata == 1)
+        else if (metadata == 1)
             ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 1), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, -0.3F, 0, 0, 0);
-        else if(metadata == 2)
+        else if (metadata == 2)
             ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0F, 0, 0, -0.3);
-        else if(metadata == 3)
+        else if (metadata == 3)
             ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0F, 0, 0, 0.3);
-        else if(metadata == 4)
+        else if (metadata == 4)
             ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0F, -0.3, 0, 0);
-        else if(metadata == 5)
+        else if (metadata == 5)
             ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0F, 0.3, 0, 0);
     }
 
@@ -73,58 +71,58 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
         {
             case 0:
             {
-                if(side == 0)
+                if (side == 0)
                     texture = super.getTextureForRender(1, 0);
-                else if(side == 1)
+                else if (side == 1)
                     texture = super.getTextureForRender(0, 0);
                 else if (side == 3)
                     texture = this.getDefaultTexture();
 
                 break;
             }
-            
+
             case 2:
             {
-                
-                if(side == 0 || side == 1)
+
+                if (side == 0 || side == 1)
                     texture = this.getDefaultTexture();
-                else if(side == 2)
+                else if (side == 2)
                     texture = super.getTextureForRender(1, 0);
-                else if(side == 3)
+                else if (side == 3)
                     texture = super.getTextureForRender(0, 0);
                 break;
             }
-            
+
             case 3:
             {
-                
-                if(side == 0 || side == 1)
+
+                if (side == 0 || side == 1)
                     texture = this.getDefaultTexture();
-                else if(side == 2)
+                else if (side == 2)
                     texture = super.getTextureForRender(0, 0);
-                else if(side == 3)
+                else if (side == 3)
                     texture = super.getTextureForRender(1, 0);
                 break;
             }
-            
+
             case 4:
             {
-                if(side == 0 || side == 1 || side == 3)
+                if (side == 0 || side == 1 || side == 3)
                     texture = this.getDefaultTexture();
-                else if(side == 4)
+                else if (side == 4)
                     texture = super.getTextureForRender(1, 0);
-                else if(side == 5)
+                else if (side == 5)
                     texture = super.getTextureForRender(0, 0);
                 break;
             }
-            
+
             case 5:
             {
-                if(side == 0 || side == 1 || side == 3)
+                if (side == 0 || side == 1 || side == 3)
                     texture = this.getDefaultTexture();
-                else if(side == 4)
+                else if (side == 4)
                     texture = super.getTextureForRender(0, 0);
-                else if(side == 5)
+                else if (side == 5)
                     texture = super.getTextureForRender(1, 0);
                 break;
             }
@@ -140,9 +138,8 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
 
         }
 
-        
 
-        if(texture == null)
+        if (texture == null)
             texture = super.getTextureForRender(side, meta);
 
         return texture;
@@ -173,7 +170,7 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     @Override
     public TileEntity createNewTileEntity(World world, int metadata)
     {
-        return new TileEntityExtraLifter();
+        return new TileEntityExtraLifter(metadata);
     }
 
 
