@@ -3,6 +3,7 @@ package eu.thog92.thaumicthings.tileentity;
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import thaumcraft.api.TileThaumcraft;
 import thaumcraft.common.Thaumcraft;
@@ -18,6 +19,8 @@ public class TileEntityExtraLifter extends TileThaumcraft
     public int rangeAbove;
     public boolean requiresUpdate;
     public boolean disabled;
+    
+    public boolean isShiftKeyPressed;
 
     public TileEntityExtraLifter()
     {
@@ -44,7 +47,7 @@ public class TileEntityExtraLifter extends TileThaumcraft
     public void updateEntity()
     {
         super.updateEntity();
-        int maxX = 0, maxY = 0, maxZ = 0;
+        this.isShiftKeyPressed = Thaumcraft.proxy.isShiftKeyDown();
 
         this.counter += 1;
         if ((this.requiresUpdate) || (this.counter % 100 == 0))
@@ -110,6 +113,14 @@ public class TileEntityExtraLifter extends TileThaumcraft
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + this.rangeAbove);
             }
+            else if(blockMetadata == 4)
+            {
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord - this.rangeAbove, this.yCoord, this.zCoord, this.xCoord, this.yCoord + 1, this.zCoord + 1);
+            }
+            else if(blockMetadata == 5)
+            {
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + this.rangeAbove, this.yCoord + 1, this.zCoord + 1);
+            }
             else
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 1,
@@ -120,7 +131,6 @@ public class TileEntityExtraLifter extends TileThaumcraft
             List<Entity> targets = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
             
             if (targets.size() > 0)
-                System.out.println(targets);
                 for (Entity e : targets)
                 {
                     if(blockMetadata == 0)
@@ -129,16 +139,19 @@ public class TileEntityExtraLifter extends TileThaumcraft
                     }
                     else if(blockMetadata == 2)
                     {
-                        this.manageNorthOrientation(e);
+                        e.motionZ = this.manageOrientation(e, 1.0F, e.motionZ);
                     }
                     else if(blockMetadata == 3)
                     {
-                        e.motionY = -e.fallDistance;
-                        if (Thaumcraft.proxy.isShiftKeyDown())
-                        {
-                            e.motionZ -= 0.1000000014901161D;
-                        } else if (e.motionZ < 0.3499999940395355D)
-                            e.motionZ += 0.1000000014901161D;
+                        e.motionZ = this.manageOrientation(e, -1.0F, e.motionZ);
+                    }
+                    else if(blockMetadata == 4)
+                    {
+                        e.motionX = this.manageOrientation(e, 1.0F, e.motionX);
+                    }
+                    else if(blockMetadata == 5)
+                    {
+                        e.motionX = this.manageOrientation(e, -1.0F, e.motionX);
                     }
                     else
                     {
@@ -152,9 +165,9 @@ public class TileEntityExtraLifter extends TileThaumcraft
 
     }
 
-    public void manageDefaultOrientation(Entity e)
+    private void manageDefaultOrientation(Entity e)
     {
-        if (Thaumcraft.proxy.isShiftKeyDown())
+        if (e instanceof EntityPlayer && isShiftKeyPressed)
         {
             if (e.motionY < 0.0D)
                 e.motionY *= 0.8999999761581421D;
@@ -162,23 +175,25 @@ public class TileEntityExtraLifter extends TileThaumcraft
             e.motionY += 0.1000000014901161D;
     }
 
-    public void manageDownOrientation(Entity e)
+    private void manageDownOrientation(Entity e)
     {
-        if (Thaumcraft.proxy.isShiftKeyDown())
+        if (e instanceof EntityPlayer && isShiftKeyPressed)
         {
             e.motionY += 0.1000000014901161D;
         } else if (e.motionY < 0.0D)
             e.motionY *= 0.8999999761581421D;
     }
     
-    public void manageNorthOrientation(Entity e)
+    private double manageOrientation(Entity e, float modifier, double motion)
     {
         e.motionY = -e.fallDistance;
-        if (Thaumcraft.proxy.isShiftKeyDown())
+        if (e instanceof EntityPlayer && isShiftKeyPressed)
         {
-            e.motionZ += 0.1000000014901161D;
-        } else if (e.motionZ > -0.3499999940395355D)
-            e.motionZ -= 0.1000000014901161D;
+            motion += modifier * 0.1000000014901161D;
+        } else if ((modifier < 0 && motion > modifier *0.3499999940395355D) || (modifier > 0 && motion < modifier *0.3499999940395355))
+            motion -= modifier * 0.1000000014901161D;
+        
+        return motion;
     }
 
     public boolean isDisabled()
