@@ -9,10 +9,12 @@ import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import thaumcraft.api.wands.IWandable;
 import thaumcraft.common.Thaumcraft;
 
 import java.util.Random;
@@ -171,13 +173,11 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     {
         return new TileEntityExtraLifter(metadata);
     }
-
-
+    
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack)
     {
         int l = BlockPistonBase.determineOrientation(world, x, y, z, placer);
-        System.out.println(l);
         world.setBlockMetadataWithNotify(x, y, z, l, 2);
     }
 

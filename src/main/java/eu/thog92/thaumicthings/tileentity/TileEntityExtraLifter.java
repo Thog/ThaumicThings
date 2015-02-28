@@ -2,10 +2,15 @@ package eu.thog92.thaumicthings.tileentity;
 
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import thaumcraft.api.TileThaumcraft;
+import thaumcraft.api.wands.IWandable;
 import thaumcraft.common.Thaumcraft;
 
 import java.util.List;
@@ -13,7 +18,7 @@ import java.util.List;
 /**
  * Created by thog on 2/27/15.
  */
-public class TileEntityExtraLifter extends TileThaumcraft
+public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 {
     private int counter;
     public int rangeAbove;
@@ -97,7 +102,6 @@ public class TileEntityExtraLifter extends TileThaumcraft
 
         if ((this.rangeAbove > 0) && (!(isDisabled())))
         {
-            //System.out.println("HERE");
             AxisAlignedBB aabb;
 
             if(blockMetadata == 0)
@@ -106,7 +110,6 @@ public class TileEntityExtraLifter extends TileThaumcraft
             }
             else if(blockMetadata == 2)
             {
-                //System.out.println(zCoord);
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord - this.rangeAbove, this.xCoord + 1, this.yCoord + 1, this.zCoord);
             }
             else if (blockMetadata == 3)
@@ -199,5 +202,38 @@ public class TileEntityExtraLifter extends TileThaumcraft
     public boolean isDisabled()
     {
         return false;
+    }
+
+    @Override
+    public void onUsingWandTick(ItemStack wandstack, EntityPlayer player, int count)
+    {
+        
+    }
+
+    @Override
+    public ItemStack onWandRightClick(World world, ItemStack wandstack, EntityPlayer player)
+    {
+        return wandstack;
+    }
+
+    @Override
+    public int onWandRightClick(World world, ItemStack wandstack, EntityPlayer player, int x, int y, int z, int side, int md)
+    {
+        if(player.isSneaking())
+        {
+            int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
+            world.setBlockMetadataWithNotify(x, y, z, l, 2);
+        }
+        else
+        {
+            
+        }
+        return 0;
+    }
+
+    @Override
+    public void onWandStoppedUsing(ItemStack wandstack, World world, EntityPlayer player, int count)
+    {
+        
     }
 }

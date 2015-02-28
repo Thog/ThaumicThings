@@ -237,7 +237,8 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
         renderer.clearOverrideBlockTexture();
         block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         renderer.setRenderBoundsFromBlock(block);
-
+        renderer.uvRotateBottom = 0;
+        renderer.uvRotateTop = 0;
 
         GL11.glPopMatrix();
         return true;
