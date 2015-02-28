@@ -19,8 +19,7 @@ public class ClientProxy extends CommonProxy
     }
 
 
-    public void sparkle(float x, float y, float z, float size, int color,
-                        float gravity, double motionX, double motionY, double motionZ)
+    public void sparkle(float x, float y, float z, float size, int color, double motionX, double motionY, double motionZ)
     {
         if ((getClientWorld() == null)
                 || (getClientWorld().rand.nextInt(6) >= particleCount(2)))
@@ -29,9 +28,8 @@ public class ClientProxy extends CommonProxy
 
         fx.noClip = true;
         fx.motionX = motionX;
-        fx.motionY = motionY;
+        fx.motionY += motionY;
         fx.motionZ = motionZ;
-        fx.setGravity(gravity);
         ParticleEngine.instance.addEffect(getClientWorld(), fx);
     }
 
