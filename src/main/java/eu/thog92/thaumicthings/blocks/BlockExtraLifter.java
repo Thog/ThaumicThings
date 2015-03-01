@@ -9,12 +9,10 @@ import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import thaumcraft.api.wands.IWandable;
 import thaumcraft.common.Thaumcraft;
 
 import java.util.Random;
@@ -48,18 +46,21 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     public void randomDisplayTick(World world, int x, int y, int z, Random r)
     {
         int metadata = world.getBlockMetadata(x, y, z);
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if(!(tile instanceof TileEntityExtraLifter)) return;
+        float modfier = ((TileEntityExtraLifter) tile).getModifier();
         if (metadata == 0)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) y, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, -0.3F, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) y, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, modfier * -0.3F, 0);
         else if (metadata == 1)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 1), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0.3F, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 1), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, modfier * 0.3F, 0);
         else if (metadata == 2)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, -0.3);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, modfier * -0.3);
         else if (metadata == 3)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, 0.3);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, modfier * 0.3);
         else if (metadata == 4)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, -0.3, 0, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, modfier * -0.3, 0, 0);
         else if (metadata == 5)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0.3, 0, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, modfier * 0.3, 0, 0);
     }
 
     @SideOnly(Side.CLIENT)

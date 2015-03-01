@@ -1,12 +1,11 @@
 package eu.thog92.thaumicthings.tileentity;
 
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import thaumcraft.api.TileThaumcraft;
@@ -25,6 +24,10 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     public boolean requiresUpdate;
     public boolean disabled;
     
+    public float modifier = 1.0F;
+    
+    public boolean reverted;
+    
     public boolean isShiftKeyPressed;
 
     public TileEntityExtraLifter()
@@ -42,8 +45,6 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         
     }
     
-
-
     public boolean canUpdate()
     {
         return true;
@@ -79,6 +80,58 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                 {
                     this.rangeAbove += 1;
                 }
+            }
+            else if(blockMetadata == 2)
+            {
+                while ((this.worldObj.getBlock(this.xCoord, this.yCoord,
+                    this.zCoord + count) instanceof BlockExtraLifter))
+                {
+                    ++count;
+                    max += 10;
+                }
+                
+
+                this.rangeAbove = 0;
+                while ((this.rangeAbove < max)
+                        && (!(this.worldObj.getBlock(this.xCoord , this.yCoord, this.zCoord - 1 - this.rangeAbove).isOpaqueCube())))
+                {
+                    this.rangeAbove += 1;
+                }
+            }
+            else if(blockMetadata == 4)
+            {
+                while ((this.worldObj.getBlock(this.xCoord + count, this.yCoord,
+                    this.zCoord) instanceof BlockExtraLifter))
+                {
+                    ++count;
+                    max += 10;
+                }
+                
+
+                this.rangeAbove = 0;
+                while ((this.rangeAbove < max)
+                        && (!(this.worldObj.getBlock(this.xCoord - 1 - this.rangeAbove, this.yCoord, this.zCoord).isOpaqueCube())))
+                {
+                    this.rangeAbove += 1;
+                }
+            }
+            else if(blockMetadata == 5)
+            {
+                while ((this.worldObj.getBlock(this.xCoord - count, this.yCoord,
+                        this.zCoord) instanceof BlockExtraLifter))
+                    {
+                        ++count;
+                        max += 10;
+                    }
+                    
+
+                    this.rangeAbove = 0;
+                    while ((this.rangeAbove < max)
+                            && (!(this.worldObj.getBlock(this.xCoord + 1 + this.rangeAbove, this.yCoord, this.zCoord).isOpaqueCube())))
+                    {
+                        this.rangeAbove += 1;
+                    }
+
             }
             else
             {
@@ -132,33 +185,38 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
             }
 
             List<Entity> targets = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
-            
             if (targets.size() > 0)
                 for (Entity e : targets)
                 {
                     if(blockMetadata == 0)
                     {
-                        this.manageDownOrientation(e);
+                        if(!this.reverted)
+                            this.manageDownOrientation(e);
+                        else
+                            this.manageDefaultOrientation(e);
                     }
                     else if(blockMetadata == 2)
                     {
-                        e.motionZ = this.manageOrientation(e, 1.0F, e.motionZ);
+                        e.motionZ = this.manageOrientation(e, modifier * 1.0F, e.motionZ);
                     }
                     else if(blockMetadata == 3)
                     {
-                        e.motionZ = this.manageOrientation(e, -1.0F, e.motionZ);
+                        e.motionZ = this.manageOrientation(e, modifier * -1.0F, e.motionZ);
                     }
                     else if(blockMetadata == 4)
                     {
-                        e.motionX = this.manageOrientation(e, 1.0F, e.motionX);
+                        e.motionX = this.manageOrientation(e, modifier * 1.0F, e.motionX);
                     }
                     else if(blockMetadata == 5)
                     {
-                        e.motionX = this.manageOrientation(e, -1.0F, e.motionX);
+                        e.motionX = this.manageOrientation(e, modifier * -1.0F, e.motionX);
                     }
                     else
                     {
-                        this.manageDefaultOrientation(e);
+                        if(!this.reverted)
+                            this.manageDefaultOrientation(e);
+                        else
+                            this.manageDownOrientation(e);
                     }
 
                     // Disable damages
@@ -226,7 +284,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         }
         else
         {
-            
+            this.setInvert(!reverted);
         }
         return 0;
     }
@@ -235,5 +293,38 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     public void onWandStoppedUsing(ItemStack wandstack, World world, EntityPlayer player, int count)
     {
         
+    }
+    
+    @Override
+    public void readCustomNBT(NBTTagCompound nbttagcompound)
+    {
+        this.reverted = nbttagcompound.getBoolean("reverted");
+        this.updateModifier();
+    }
+    
+    @Override
+    public void writeCustomNBT(NBTTagCompound nbttagcompound)
+    {
+        nbttagcompound.setBoolean("reverted", this.reverted);
+        this.updateModifier();
+    }
+    
+    public void setInvert(boolean inverted)
+    {
+        this.reverted = inverted;
+        this.updateModifier();
+    }
+    
+    public void updateModifier()
+    {
+        if(this.reverted)
+            this.modifier = -1.0F;
+        else
+            this.modifier = 1.0F;
+    }
+
+    public float getModifier()
+    {
+        return modifier;
     }
 }

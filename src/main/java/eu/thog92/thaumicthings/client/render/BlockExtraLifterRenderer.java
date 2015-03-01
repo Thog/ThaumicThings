@@ -56,12 +56,12 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
         if (metadata == 0)
         {
             tessellator.setColorOpaque_I(40960);
-
+            
             renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
 
             if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
             {
-
+                
             }
 
             tessellator.setColorOpaque_I(14488063);
@@ -92,7 +92,6 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             {
                 renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
             }
-
 
             tessellator.setColorOpaque_I(14488063);
             if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
