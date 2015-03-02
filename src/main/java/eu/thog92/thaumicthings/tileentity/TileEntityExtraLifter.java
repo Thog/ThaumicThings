@@ -14,21 +14,15 @@ import thaumcraft.common.Thaumcraft;
 
 import java.util.List;
 
-/**
- * Created by thog on 2/27/15.
- */
 public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 {
-    private int counter;
     public int rangeAbove;
     public boolean requiresUpdate;
     public boolean disabled;
-    
     public float modifier = 1.0F;
-    
     public boolean reverted;
-    
     public boolean isShiftKeyPressed;
+    private int counter;
 
     public TileEntityExtraLifter()
     {
@@ -37,14 +31,14 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         this.requiresUpdate = true;
         this.disabled = false;
     }
-    
+
     public TileEntityExtraLifter(int metadata)
     {
         this();
         this.blockMetadata = metadata;
-        
+
     }
-    
+
     public boolean canUpdate()
     {
         return true;
@@ -64,10 +58,10 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
             int max = 10;
             int count = 1;
-            if(blockMetadata == 0)
+            if (blockMetadata == 0)
             {
                 while ((this.worldObj.getBlock(this.xCoord, this.yCoord + count,
-                    this.zCoord) instanceof BlockExtraLifter))
+                        this.zCoord) instanceof BlockExtraLifter))
                 {
                     ++count;
                     max += 10;
@@ -80,33 +74,31 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                 {
                     this.rangeAbove += 1;
                 }
-            }
-            else if(blockMetadata == 2)
+            } else if (blockMetadata == 2)
             {
                 while ((this.worldObj.getBlock(this.xCoord, this.yCoord,
-                    this.zCoord + count) instanceof BlockExtraLifter))
+                        this.zCoord + count) instanceof BlockExtraLifter))
                 {
                     ++count;
                     max += 10;
                 }
-                
+
 
                 this.rangeAbove = 0;
                 while ((this.rangeAbove < max)
-                        && (!(this.worldObj.getBlock(this.xCoord , this.yCoord, this.zCoord - 1 - this.rangeAbove).isOpaqueCube())))
+                        && (!(this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord - 1 - this.rangeAbove).isOpaqueCube())))
                 {
                     this.rangeAbove += 1;
                 }
-            }
-            else if(blockMetadata == 4)
+            } else if (blockMetadata == 4)
             {
                 while ((this.worldObj.getBlock(this.xCoord + count, this.yCoord,
-                    this.zCoord) instanceof BlockExtraLifter))
+                        this.zCoord) instanceof BlockExtraLifter))
                 {
                     ++count;
                     max += 10;
                 }
-                
+
 
                 this.rangeAbove = 0;
                 while ((this.rangeAbove < max)
@@ -114,29 +106,27 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                 {
                     this.rangeAbove += 1;
                 }
-            }
-            else if(blockMetadata == 5)
+            } else if (blockMetadata == 5)
             {
                 while ((this.worldObj.getBlock(this.xCoord - count, this.yCoord,
                         this.zCoord) instanceof BlockExtraLifter))
-                    {
-                        ++count;
-                        max += 10;
-                    }
-                    
+                {
+                    ++count;
+                    max += 10;
+                }
 
-                    this.rangeAbove = 0;
-                    while ((this.rangeAbove < max)
-                            && (!(this.worldObj.getBlock(this.xCoord + 1 + this.rangeAbove, this.yCoord, this.zCoord).isOpaqueCube())))
-                    {
-                        this.rangeAbove += 1;
-                    }
 
-            }
-            else
+                this.rangeAbove = 0;
+                while ((this.rangeAbove < max)
+                        && (!(this.worldObj.getBlock(this.xCoord + 1 + this.rangeAbove, this.yCoord, this.zCoord).isOpaqueCube())))
+                {
+                    this.rangeAbove += 1;
+                }
+
+            } else
             {
                 while ((this.worldObj.getBlock(this.xCoord, this.yCoord - count,
-                    this.zCoord) instanceof BlockExtraLifter))
+                        this.zCoord) instanceof BlockExtraLifter))
                 {
                     ++count;
                     max += 10;
@@ -157,27 +147,22 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         {
             AxisAlignedBB aabb;
 
-            if(blockMetadata == 0)
+            if (blockMetadata == 0)
             {
-                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - this.rangeAbove , this.zCoord, this.xCoord + 1, this.yCoord, this.zCoord + 1);
-            }
-            else if(blockMetadata == 2)
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - this.rangeAbove, this.zCoord, this.xCoord + 1, this.yCoord, this.zCoord + 1);
+            } else if (blockMetadata == 2)
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord - this.rangeAbove, this.xCoord + 1, this.yCoord + 1, this.zCoord);
-            }
-            else if (blockMetadata == 3)
+            } else if (blockMetadata == 3)
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + this.rangeAbove);
-            }
-            else if(blockMetadata == 4)
+            } else if (blockMetadata == 4)
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord - this.rangeAbove, this.yCoord, this.zCoord, this.xCoord, this.yCoord + 1, this.zCoord + 1);
-            }
-            else if(blockMetadata == 5)
+            } else if (blockMetadata == 5)
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + this.rangeAbove, this.yCoord + 1, this.zCoord + 1);
-            }
-            else
+            } else
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 1,
                         this.zCoord, this.xCoord + 1, this.yCoord + 1
@@ -188,32 +173,27 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
             if (targets.size() > 0)
                 for (Entity e : targets)
                 {
-                    if(blockMetadata == 0)
+                    if (blockMetadata == 0)
                     {
-                        if(!this.reverted)
+                        if (!this.reverted)
                             this.manageDownOrientation(e);
                         else
                             this.manageDefaultOrientation(e);
-                    }
-                    else if(blockMetadata == 2)
+                    } else if (blockMetadata == 2)
                     {
                         e.motionZ = this.manageOrientation(e, modifier * 1.0F, e.motionZ);
-                    }
-                    else if(blockMetadata == 3)
+                    } else if (blockMetadata == 3)
                     {
                         e.motionZ = this.manageOrientation(e, modifier * -1.0F, e.motionZ);
-                    }
-                    else if(blockMetadata == 4)
+                    } else if (blockMetadata == 4)
                     {
                         e.motionX = this.manageOrientation(e, modifier * 1.0F, e.motionX);
-                    }
-                    else if(blockMetadata == 5)
+                    } else if (blockMetadata == 5)
                     {
                         e.motionX = this.manageOrientation(e, modifier * -1.0F, e.motionX);
-                    }
-                    else
+                    } else
                     {
-                        if(!this.reverted)
+                        if (!this.reverted)
                             this.manageDefaultOrientation(e);
                         else
                             this.manageDownOrientation(e);
@@ -244,16 +224,16 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         } else if (e.motionY < 0.0D)
             e.motionY *= 0.8999999761581421D;
     }
-    
+
     private double manageOrientation(Entity e, float modifier, double motion)
     {
         e.motionY = -e.fallDistance;
         if (e instanceof EntityPlayer && isShiftKeyPressed)
         {
             motion += modifier * 0.1000000014901161D;
-        } else if ((modifier < 0 && motion > modifier *0.3499999940395355D) || (modifier > 0 && motion < modifier *0.3499999940395355))
+        } else if ((modifier < 0 && motion > modifier * 0.3499999940395355D) || (modifier > 0 && motion < modifier * 0.3499999940395355))
             motion -= modifier * 0.1000000014901161D;
-        
+
         return motion;
     }
 
@@ -265,7 +245,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     @Override
     public void onUsingWandTick(ItemStack wandstack, EntityPlayer player, int count)
     {
-        
+
     }
 
     @Override
@@ -277,12 +257,11 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     @Override
     public int onWandRightClick(World world, ItemStack wandstack, EntityPlayer player, int x, int y, int z, int side, int md)
     {
-        if(player.isSneaking())
+        if (player.isSneaking())
         {
             int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
             world.setBlockMetadataWithNotify(x, y, z, l, 2);
-        }
-        else
+        } else
         {
             this.setInvert(!reverted);
         }
@@ -292,32 +271,32 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     @Override
     public void onWandStoppedUsing(ItemStack wandstack, World world, EntityPlayer player, int count)
     {
-        
+
     }
-    
+
     @Override
     public void readCustomNBT(NBTTagCompound nbttagcompound)
     {
         this.reverted = nbttagcompound.getBoolean("reverted");
         this.updateModifier();
     }
-    
+
     @Override
     public void writeCustomNBT(NBTTagCompound nbttagcompound)
     {
         nbttagcompound.setBoolean("reverted", this.reverted);
         this.updateModifier();
     }
-    
+
     public void setInvert(boolean inverted)
     {
         this.reverted = inverted;
         this.updateModifier();
     }
-    
+
     public void updateModifier()
     {
-        if(this.reverted)
+        if (this.reverted)
             this.modifier = -1.0F;
         else
             this.modifier = 1.0F;

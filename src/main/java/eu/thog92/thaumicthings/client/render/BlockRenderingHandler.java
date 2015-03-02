@@ -10,9 +10,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
-/**
- * Created by thog on 2/26/15.
- */
 public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 {
 
