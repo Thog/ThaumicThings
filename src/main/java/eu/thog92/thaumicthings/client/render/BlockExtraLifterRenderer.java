@@ -2,8 +2,11 @@ package eu.thog92.thaumicthings.client.render;
 
 import eu.thog92.thaumicthings.ClientProxy;
 import eu.thog92.thaumicthings.blocks.BlockMagic;
+import eu.thog92.thaumicthings.tileentity.TileEntityExtraLifter;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -47,6 +50,13 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
 
         //TODO: TileEntity
         int brightness = 180;
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if(tile != null && tile instanceof TileEntityExtraLifter)
+        {
+            TileEntityExtraLifter lifterTile = (TileEntityExtraLifter) tile;
+            if(lifterTile.isDisabled())
+                brightness = 0;
+        }
 
         // Liquids render
         tessellator.setBrightness(brightness);

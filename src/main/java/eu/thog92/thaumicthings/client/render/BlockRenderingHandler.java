@@ -106,7 +106,6 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
 
     public int getBrightness(IBlockAccess blockAccess, int x, int y, int z, Block block)
     {
-
         int mb = block.getMixedBrightnessForBlock(blockAccess, x, y, z);
         tessellator.setBrightness(mb);
         float f = 1.0F;

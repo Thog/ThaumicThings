@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import eu.thog92.thaumicthings.ClientProxy;
 import eu.thog92.thaumicthings.ThaumicThings;
 import eu.thog92.thaumicthings.tileentity.TileEntityExtraLifter;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -49,7 +50,10 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
         int metadata = world.getBlockMetadata(x, y, z);
         TileEntity tile = world.getTileEntity(x, y, z);
         if (!(tile instanceof TileEntityExtraLifter)) return;
-        float modifier = ((TileEntityExtraLifter) tile).getModifier();
+        TileEntityExtraLifter tileLifter = (TileEntityExtraLifter) tile;
+        float modifier = tileLifter.getModifier();
+        if(tileLifter.isDisabled()) return;
+
         if (metadata == 0)
             ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) y, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, modifier * -0.3F, 0);
         else if (metadata == 1)
@@ -185,7 +189,29 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
 
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side)
     {
+        //TODO: Check side and metadata
         return true;
+    }
+
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if(te != null && te instanceof TileEntityExtraLifter && ((TileEntityExtraLifter)te).isDisabled() != ((TileEntityExtraLifter)te).lastDisabledStatus()) {
+            this.updateNeighborLifter(world, x, y, z);
+        }
+
+        super.onNeighborBlockChange(world, x, y, z, par5);
+    }
+
+    private void updateNeighborLifter(World world, int x, int y, int z) {
+        TileEntityExtraLifter te = (TileEntityExtraLifter) world.getTileEntity(x, y, z);
+
+        for(int count = 1; te.getNeightborBlock(count) == this; ++count) {
+            TileEntity neightborTe = world.getTileEntity(x, y - count, z);
+            if(neightborTe != null && neightborTe instanceof TileEntityExtraLifter) {
+                ((TileEntityExtraLifter)neightborTe).requiresUpdate = true;
+            }
+        }
+
     }
 
 }

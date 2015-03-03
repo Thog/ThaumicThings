@@ -1,6 +1,7 @@
 package eu.thog92.thaumicthings.tileentity;
 
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 {
     public int rangeAbove;
     public boolean requiresUpdate;
-    public boolean disabled;
+    private boolean wasDisabled;
     public float modifier = 1.0F;
     public boolean reverted;
     public boolean isShiftKeyPressed;
@@ -29,7 +30,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         this.counter = 0;
         this.rangeAbove = 0;
         this.requiresUpdate = true;
-        this.disabled = false;
+        this.wasDisabled = false;
     }
 
     public TileEntityExtraLifter(int metadata)
@@ -52,7 +53,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         this.counter += 1;
         if ((this.requiresUpdate) || (this.counter % 100 == 0))
         {
-            this.disabled = isDisabled();
+            this.wasDisabled = isDisabled();
 
             this.requiresUpdate = false;
 
@@ -90,7 +91,26 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                 {
                     this.rangeAbove += 1;
                 }
-            } else if (blockMetadata == 4)
+                
+            }
+            else if (blockMetadata == 3)
+            {
+                while ((this.worldObj.getBlock(this.xCoord, this.yCoord,
+                        this.zCoord - count) instanceof BlockExtraLifter))
+                {
+                    ++count;
+                    max += 10;
+                }
+
+
+                this.rangeAbove = 0;
+                while ((this.rangeAbove < max)
+                        && (!(this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord + 1 + this.rangeAbove).isOpaqueCube())))
+                {
+                    this.rangeAbove += 1;
+                }
+            }
+            else if (blockMetadata == 4)
             {
                 while ((this.worldObj.getBlock(this.xCoord + count, this.yCoord,
                         this.zCoord) instanceof BlockExtraLifter))
@@ -239,7 +259,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
     public boolean isDisabled()
     {
-        return false;
+        return this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord) || this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord + 1, this.zCoord);
     }
 
     @Override
@@ -305,5 +325,33 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     public float getModifier()
     {
         return modifier;
+    }
+
+    public boolean lastDisabledStatus()
+    {
+        return wasDisabled;
+    }
+
+    public Block getNeightborBlock(int count)
+    {
+        switch (blockMetadata)
+        {
+            case 0:
+                return worldObj.getBlock(xCoord, yCoord + count, zCoord);
+            case 2:
+                return this.worldObj.getBlock(this.xCoord, this.yCoord,
+                        this.zCoord + count);
+            case 3:
+                return this.worldObj.getBlock(this.xCoord, this.yCoord,
+                        this.zCoord + count);
+            case 4:
+                return this.worldObj.getBlock(this.xCoord + count, this.yCoord,
+                        this.zCoord);
+            case 5:
+                return this.worldObj.getBlock(this.xCoord - count, this.yCoord,
+                        this.zCoord);
+            default:
+                return worldObj.getBlock(xCoord, yCoord - count, zCoord);
+        }
     }
 }
