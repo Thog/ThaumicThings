@@ -51,21 +51,21 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
         TileEntity tile = world.getTileEntity(x, y, z);
         if (!(tile instanceof TileEntityExtraLifter)) return;
         TileEntityExtraLifter tileLifter = (TileEntityExtraLifter) tile;
-        float modifier = tileLifter.getModifier();
+        float directionModifer = tileLifter.getModifier();
         if(tileLifter.isDisabled()) return;
-
+        float modifier = tileLifter.reverted ? 3.0F : 0.0F;
         if (metadata == 0)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) y, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, modifier * -0.3F, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F) - modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * -0.3F, 0);
         else if (metadata == 1)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 1), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, modifier * 0.3F, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F) + modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * 0.3F, 0);
         else if (metadata == 2)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, modifier * -0.3);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F - modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * -0.3F);
         else if (metadata == 3)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, modifier * 0.3);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * 0.3F);
         else if (metadata == 4)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, modifier * -0.3, 0, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F - modifier + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * -0.3F, 0, 0);
         else if (metadata == 5)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, modifier * 0.3, 0, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + modifier + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * 0.3F, 0, 0);
     }
 
     @SideOnly(Side.CLIENT)
@@ -184,6 +184,7 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack)
     {
         int l = BlockPistonBase.determineOrientation(world, x, y, z, placer);
+        System.out.println(l);
         world.setBlockMetadataWithNotify(x, y, z, l, 2);
     }
 
@@ -206,12 +207,12 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
         TileEntityExtraLifter te = (TileEntityExtraLifter) world.getTileEntity(x, y, z);
 
         for(int count = 1; te.getNeightborBlock(count) == this; ++count) {
-            TileEntity neightborTe = world.getTileEntity(x, y - count, z);
+            TileEntity neightborTe = te.getNeightborTile(count);
             if(neightborTe != null && neightborTe instanceof TileEntityExtraLifter) {
                 ((TileEntityExtraLifter)neightborTe).requiresUpdate = true;
             }
         }
-
+        te.requiresUpdate = true;
     }
 
 }

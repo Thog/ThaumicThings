@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import thaumcraft.api.TileThaumcraft;
@@ -59,109 +60,26 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
             int max = 10;
             int count = 1;
-            if (blockMetadata == 0)
+            
+            
+            while ((this.getNeightborBlock(count) instanceof BlockExtraLifter))
             {
-                while ((this.worldObj.getBlock(this.xCoord, this.yCoord + count,
-                        this.zCoord) instanceof BlockExtraLifter))
-                {
-                    ++count;
-                    max += 10;
-                }
-
-                this.rangeAbove = 0;
-                while ((this.rangeAbove < max)
-                        && (!(this.worldObj.getBlock(this.xCoord, this.yCoord - 1
-                        - this.rangeAbove, this.zCoord).isOpaqueCube())))
-                {
-                    this.rangeAbove += 1;
-                }
-            } else if (blockMetadata == 2)
-            {
-                while ((this.worldObj.getBlock(this.xCoord, this.yCoord,
-                        this.zCoord + count) instanceof BlockExtraLifter))
-                {
-                    ++count;
-                    max += 10;
-                }
-
-
-                this.rangeAbove = 0;
-                while ((this.rangeAbove < max)
-                        && (!(this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord - 1 - this.rangeAbove).isOpaqueCube())))
-                {
-                    this.rangeAbove += 1;
-                }
+                TileEntityExtraLifter tile = (TileEntityExtraLifter) this.getNeightborTile(count);
+                if(tile.isDisabled())
+                    this.wasDisabled = true;
                 
-            }
-            else if (blockMetadata == 3)
-            {
-                while ((this.worldObj.getBlock(this.xCoord, this.yCoord,
-                        this.zCoord - count) instanceof BlockExtraLifter))
-                {
-                    ++count;
-                    max += 10;
-                }
-
-
-                this.rangeAbove = 0;
-                while ((this.rangeAbove < max)
-                        && (!(this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord + 1 + this.rangeAbove).isOpaqueCube())))
-                {
-                    this.rangeAbove += 1;
-                }
-            }
-            else if (blockMetadata == 4)
-            {
-                while ((this.worldObj.getBlock(this.xCoord + count, this.yCoord,
-                        this.zCoord) instanceof BlockExtraLifter))
-                {
-                    ++count;
-                    max += 10;
-                }
-
-
-                this.rangeAbove = 0;
-                while ((this.rangeAbove < max)
-                        && (!(this.worldObj.getBlock(this.xCoord - 1 - this.rangeAbove, this.yCoord, this.zCoord).isOpaqueCube())))
-                {
-                    this.rangeAbove += 1;
-                }
-            } else if (blockMetadata == 5)
-            {
-                while ((this.worldObj.getBlock(this.xCoord - count, this.yCoord,
-                        this.zCoord) instanceof BlockExtraLifter))
-                {
-                    ++count;
-                    max += 10;
-                }
-
-
-                this.rangeAbove = 0;
-                while ((this.rangeAbove < max)
-                        && (!(this.worldObj.getBlock(this.xCoord + 1 + this.rangeAbove, this.yCoord, this.zCoord).isOpaqueCube())))
-                {
-                    this.rangeAbove += 1;
-                }
-
-            } else
-            {
-                while ((this.worldObj.getBlock(this.xCoord, this.yCoord - count,
-                        this.zCoord) instanceof BlockExtraLifter))
-                {
-                    ++count;
-                    max += 10;
-                }
-
-                this.rangeAbove = 0;
-                while ((this.rangeAbove < max)
-                        && (!(this.worldObj.getBlock(this.xCoord, this.yCoord + 1
-                        + this.rangeAbove, this.zCoord).isOpaqueCube())))
-                {
-                    this.rangeAbove += 1;
-                }
+                ++count;
+                max += 10;
             }
 
+
+            this.rangeAbove = 0;
+            while ((this.rangeAbove < max) && (!(this.getNeightborBlock(- 1 - this.rangeAbove).isOpaqueCube())))
+            {
+                this.rangeAbove += 1;
+            }
         }
+
 
         if ((this.rangeAbove > 0) && (!(isDisabled())))
         {
@@ -247,7 +165,14 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
     private double manageOrientation(Entity e, float modifier, double motion)
     {
-        e.motionY = -e.fallDistance;
+        if (!(e instanceof EntityPlayer))
+            e.motionY = -e.fallDistance;
+        else
+        {
+            //TODO: Handle jump (not only for player?)
+            e.motionY = -e.fallDistance;
+        }
+        
         if (e instanceof EntityPlayer && isShiftKeyPressed)
         {
             motion += modifier * 0.1000000014901161D;
@@ -343,7 +268,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                         this.zCoord + count);
             case 3:
                 return this.worldObj.getBlock(this.xCoord, this.yCoord,
-                        this.zCoord + count);
+                        this.zCoord - count);
             case 4:
                 return this.worldObj.getBlock(this.xCoord + count, this.yCoord,
                         this.zCoord);
@@ -352,6 +277,29 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                         this.zCoord);
             default:
                 return worldObj.getBlock(xCoord, yCoord - count, zCoord);
+        }
+    }
+    
+    public TileEntity getNeightborTile(int count)
+    {
+        switch (blockMetadata)
+        {
+            case 0:
+                return worldObj.getTileEntity(xCoord, yCoord + count, zCoord);
+            case 2:
+                return this.worldObj.getTileEntity(this.xCoord, this.yCoord,
+                        this.zCoord + count);
+            case 3:
+                return this.worldObj.getTileEntity(this.xCoord, this.yCoord,
+                        this.zCoord + count);
+            case 4:
+                return this.worldObj.getTileEntity(this.xCoord + count, this.yCoord,
+                        this.zCoord);
+            case 5:
+                return this.worldObj.getTileEntity(this.xCoord - count, this.yCoord,
+                        this.zCoord);
+            default:
+                return worldObj.getTileEntity(xCoord, yCoord - count, zCoord);
         }
     }
 }
