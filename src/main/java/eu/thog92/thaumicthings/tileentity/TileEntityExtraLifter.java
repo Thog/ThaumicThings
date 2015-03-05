@@ -4,6 +4,7 @@ import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -165,13 +166,11 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
     private double manageOrientation(Entity e, float modifier, double motion)
     {
-        if (!(e instanceof EntityPlayer))
-            e.motionY = -e.fallDistance;
-        else
-        {
-            //TODO: Handle jump (not only for player?)
-            e.motionY = -e.fallDistance;
-        }
+        if ((e instanceof EntityLivingBase) && ((EntityLivingBase) e).isJumping)
+            ((EntityLivingBase) e).jump();
+
+        e.motionY = -e.fallDistance;
+
         
         if (e instanceof EntityPlayer && isShiftKeyPressed)
         {
