@@ -166,9 +166,8 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
     private double manageOrientation(Entity e, float modifier, double motion)
     {
-        e.motionY = -e.fallDistance;
+        e.motionY = 0;
 
-        
         if (e.isSneaking())
         {
             motion += modifier * 0.1000000014901161D;
@@ -184,7 +183,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     }
 
     @Override
-    public void onUsingWandTick(ItemStack wandstack, EntityPlayer player, int count)
+    public void onUsingWandTick(ItemStack wandStack, EntityPlayer player, int count)
     {
 
     }
@@ -210,7 +209,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     }
 
     @Override
-    public void onWandStoppedUsing(ItemStack wandstack, World world, EntityPlayer player, int count)
+    public void onWandStoppedUsing(ItemStack wandStack, World world, EntityPlayer player, int count)
     {
 
     }
