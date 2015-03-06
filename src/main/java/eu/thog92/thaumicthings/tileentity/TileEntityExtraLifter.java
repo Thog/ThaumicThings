@@ -13,7 +13,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import thaumcraft.api.TileThaumcraft;
 import thaumcraft.api.wands.IWandable;
-import thaumcraft.common.Thaumcraft;
 
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     private boolean wasDisabled;
     public float modifier = 1.0F;
     public boolean reverted;
-    public boolean isShiftKeyPressed;
     private int counter;
 
     public TileEntityExtraLifter()
@@ -50,7 +48,6 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     public void updateEntity()
     {
         super.updateEntity();
-        this.isShiftKeyPressed = Thaumcraft.proxy.isShiftKeyDown();
 
         this.counter += 1;
         if ((this.requiresUpdate) || (this.counter % 100 == 0))
@@ -63,9 +60,9 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
             int count = 1;
             
             
-            while ((this.getNeightborBlock(count) instanceof BlockExtraLifter))
+            while ((this.getNeighborBlock(count) instanceof BlockExtraLifter))
             {
-                TileEntityExtraLifter tile = (TileEntityExtraLifter) this.getNeightborTile(count);
+                TileEntityExtraLifter tile = (TileEntityExtraLifter) this.getNeighborTile(count);
                 if(tile.isDisabled())
                     this.wasDisabled = true;
                 
@@ -75,7 +72,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
 
             this.rangeAbove = 0;
-            while ((this.rangeAbove < max) && (!(this.getNeightborBlock(- 1 - this.rangeAbove).isOpaqueCube())))
+            while ((this.rangeAbove < max) && (!(this.getNeighborBlock(-1 - this.rangeAbove).isOpaqueCube())))
             {
                 this.rangeAbove += 1;
             }
@@ -138,6 +135,9 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                             this.manageDownOrientation(e);
                     }
 
+                    if ((e instanceof EntityLivingBase) && ((EntityLivingBase) e).isJumping)
+                        ((EntityLivingBase) e).jump();
+
                     // Disable damages
                     e.fallDistance = 0.0F;
                 }
@@ -147,7 +147,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
     private void manageDefaultOrientation(Entity e)
     {
-        if (e instanceof EntityPlayer && isShiftKeyPressed)
+        if (e.isSneaking())
         {
             if (e.motionY < 0.0D)
                 e.motionY *= 0.8999999761581421D;
@@ -157,7 +157,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
     private void manageDownOrientation(Entity e)
     {
-        if (e instanceof EntityPlayer && isShiftKeyPressed)
+        if (e.isSneaking())
         {
             e.motionY += 0.1000000014901161D;
         } else if (e.motionY < 0.0D)
@@ -166,13 +166,10 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
     private double manageOrientation(Entity e, float modifier, double motion)
     {
-        if ((e instanceof EntityLivingBase) && ((EntityLivingBase) e).isJumping)
-            ((EntityLivingBase) e).jump();
-
         e.motionY = -e.fallDistance;
 
         
-        if (e instanceof EntityPlayer && isShiftKeyPressed)
+        if (e.isSneaking())
         {
             motion += modifier * 0.1000000014901161D;
         } else if ((modifier < 0 && motion > modifier * 0.3499999940395355D) || (modifier > 0 && motion < modifier * 0.3499999940395355))
@@ -256,7 +253,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         return wasDisabled;
     }
 
-    public Block getNeightborBlock(int count)
+    public Block getNeighborBlock(int count)
     {
         switch (blockMetadata)
         {
@@ -279,7 +276,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         }
     }
     
-    public TileEntity getNeightborTile(int count)
+    public TileEntity getNeighborTile(int count)
     {
         switch (blockMetadata)
         {

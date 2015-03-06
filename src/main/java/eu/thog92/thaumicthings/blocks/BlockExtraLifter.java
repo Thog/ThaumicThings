@@ -184,7 +184,6 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack)
     {
         int l = BlockPistonBase.determineOrientation(world, x, y, z, placer);
-        System.out.println(l);
         world.setBlockMetadataWithNotify(x, y, z, l, 2);
     }
 
@@ -206,8 +205,8 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     private void updateNeighborLifter(World world, int x, int y, int z) {
         TileEntityExtraLifter te = (TileEntityExtraLifter) world.getTileEntity(x, y, z);
 
-        for(int count = 1; te.getNeightborBlock(count) == this; ++count) {
-            TileEntity neightborTe = te.getNeightborTile(count);
+        for(int count = 1; te.getNeighborBlock(count) == this; ++count) {
+            TileEntity neightborTe = te.getNeighborTile(count);
             if(neightborTe != null && neightborTe instanceof TileEntityExtraLifter) {
                 ((TileEntityExtraLifter)neightborTe).requiresUpdate = true;
             }
