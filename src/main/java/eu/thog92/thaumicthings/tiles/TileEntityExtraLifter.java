@@ -1,4 +1,4 @@
-package eu.thog92.thaumicthings.tileentity;
+package eu.thog92.thaumicthings.tiles;
 
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import net.minecraft.block.Block;
@@ -18,11 +18,11 @@ import java.util.List;
 
 public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 {
-    public int rangeAbove;
-    public boolean requiresUpdate;
+    private int rangeAbove;
+    private boolean requiresUpdate;
     private boolean wasDisabled;
-    public float modifier = 1.0F;
-    public boolean reverted;
+    private float modifier = 1.0F;
+    private boolean reverted;
     private int counter;
 
     public TileEntityExtraLifter()
@@ -58,14 +58,14 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
             int max = 10;
             int count = 1;
-            
-            
+
+
             while ((this.getNeighborBlock(count) instanceof BlockExtraLifter))
             {
                 TileEntityExtraLifter tile = (TileEntityExtraLifter) this.getNeighborTile(count);
-                if(tile.isDisabled())
+                if (tile.isDisabled())
                     this.wasDisabled = true;
-                
+
                 ++count;
                 max += 10;
             }
@@ -274,7 +274,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
                 return worldObj.getBlock(xCoord, yCoord - count, zCoord);
         }
     }
-    
+
     public TileEntity getNeighborTile(int count)
     {
         switch (blockMetadata)
@@ -296,5 +296,15 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
             default:
                 return worldObj.getTileEntity(xCoord, yCoord - count, zCoord);
         }
+    }
+
+    public boolean isReverted()
+    {
+        return reverted;
+    }
+
+    public void updateNeeded()
+    {
+        this.requiresUpdate = true;
     }
 }

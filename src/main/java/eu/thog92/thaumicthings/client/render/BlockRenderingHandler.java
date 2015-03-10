@@ -34,12 +34,12 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
         return renderWorldBlock(world, x, y, z, (BlockMagic) block, modelId, renderer);
     }
 
-    public abstract boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, BlockMagic block, int modelId, RenderBlocks renderer);
+    protected abstract boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, BlockMagic block, int modelId, RenderBlocks renderer);
 
-    public abstract void renderInventoryBlock(BlockMagic block, int metadata, int modelId, RenderBlocks renderer);
+    protected abstract void renderInventoryBlock(BlockMagic block, int metadata, int modelId, RenderBlocks renderer);
 
 
-    public void drawQuadsWithBlock(RenderBlocks renderer, BlockMagic block, int metadata)
+    void drawQuadsWithBlock(RenderBlocks renderer, BlockMagic block, int metadata)
     {
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();
@@ -71,7 +71,7 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    public void drawAllCube(RenderBlocks renderer, BlockMagic block, IIcon texture)
+    void drawAllCube(RenderBlocks renderer, BlockMagic block, IIcon texture)
     {
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();

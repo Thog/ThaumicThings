@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import eu.thog92.thaumicthings.ClientProxy;
 import eu.thog92.thaumicthings.ThaumicThings;
-import eu.thog92.thaumicthings.tileentity.TileEntityExtraLifter;
+import eu.thog92.thaumicthings.tiles.TileEntityExtraLifter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.ITileEntityProvider;
@@ -19,9 +19,6 @@ import thaumcraft.common.Thaumcraft;
 
 import java.util.Random;
 
-/**
- * Created by thog on 2/26/15.
- */
 public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
 {
 
@@ -47,25 +44,26 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
     @Override
     public void randomDisplayTick(World world, int x, int y, int z, Random r)
     {
-        int metadata = world.getBlockMetadata(x, y, z);
+
         TileEntity tile = world.getTileEntity(x, y, z);
         if (!(tile instanceof TileEntityExtraLifter)) return;
         TileEntityExtraLifter tileLifter = (TileEntityExtraLifter) tile;
         float directionModifer = tileLifter.getModifier();
-        if(tileLifter.isDisabled()) return;
-        float modifier = tileLifter.reverted ? 3.0F : 0.0F;
+        if (tileLifter.isDisabled()) return;
+        float modifier = tileLifter.isReverted() ? 3.0F : 0.0F;
+        int metadata = world.getBlockMetadata(x, y, z);
         if (metadata == 0)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F) - modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * -0.3F, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F - modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * -0.3F, 0);
         else if (metadata == 1)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F) + modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * 0.3F, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F + modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * 0.3F, 0);
         else if (metadata == 2)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F - modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * -0.3F);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F - modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * -0.3F);
         else if (metadata == 3)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * 0.3F);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * 0.3F);
         else if (metadata == 4)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F - modifier + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * -0.3F, 0, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F - modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * -0.3F, 0, 0);
         else if (metadata == 5)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + modifier + r.nextFloat() * 0.6F, (float) (y + 0.5F), (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * 0.3F, 0, 0);
+            ThaumicThings.proxy.sparkle((float) x + 0.2F + modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * 0.3F, 0, 0);
     }
 
     @SideOnly(Side.CLIENT)
@@ -169,7 +167,7 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
 
     @SideOnly(Side.CLIENT)
     @Override
-    public IIcon getDefaultTexture()
+    IIcon getDefaultTexture()
     {
         return this.getTexture(2);
     }
@@ -193,25 +191,30 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
         return true;
     }
 
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block par5) {
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block par5)
+    {
         TileEntity te = world.getTileEntity(x, y, z);
-        if(te != null && te instanceof TileEntityExtraLifter && ((TileEntityExtraLifter)te).isDisabled() != ((TileEntityExtraLifter)te).lastDisabledStatus()) {
+        if (te != null && te instanceof TileEntityExtraLifter && ((TileEntityExtraLifter) te).isDisabled() != ((TileEntityExtraLifter) te).lastDisabledStatus())
+        {
             this.updateNeighborLifter(world, x, y, z);
         }
 
         super.onNeighborBlockChange(world, x, y, z, par5);
     }
 
-    private void updateNeighborLifter(World world, int x, int y, int z) {
+    private void updateNeighborLifter(World world, int x, int y, int z)
+    {
         TileEntityExtraLifter te = (TileEntityExtraLifter) world.getTileEntity(x, y, z);
 
-        for(int count = 1; te.getNeighborBlock(count) == this; ++count) {
+        for (int count = 1; te.getNeighborBlock(count) == this; ++count)
+        {
             TileEntity neightborTe = te.getNeighborTile(count);
-            if(neightborTe != null && neightborTe instanceof TileEntityExtraLifter) {
-                ((TileEntityExtraLifter)neightborTe).requiresUpdate = true;
+            if (neightborTe != null && neightborTe instanceof TileEntityExtraLifter)
+            {
+                ((TileEntityExtraLifter) neightborTe).updateNeeded();
             }
         }
-        te.requiresUpdate = true;
+        te.updateNeeded();
     }
 
 }

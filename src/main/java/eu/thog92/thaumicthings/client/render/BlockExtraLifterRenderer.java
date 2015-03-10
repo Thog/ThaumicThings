@@ -2,11 +2,10 @@ package eu.thog92.thaumicthings.client.render;
 
 import eu.thog92.thaumicthings.ClientProxy;
 import eu.thog92.thaumicthings.blocks.BlockMagic;
-import eu.thog92.thaumicthings.tileentity.TileEntityExtraLifter;
+import eu.thog92.thaumicthings.tiles.TileEntityExtraLifter;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -51,10 +50,10 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
         //TODO: TileEntity
         int brightness = 180;
         TileEntity tile = world.getTileEntity(x, y, z);
-        if(tile != null && tile instanceof TileEntityExtraLifter)
+        if (tile != null && tile instanceof TileEntityExtraLifter)
         {
             TileEntityExtraLifter lifterTile = (TileEntityExtraLifter) tile;
-            if(lifterTile.isDisabled())
+            if (lifterTile.isDisabled())
                 brightness = 0;
         }
 
@@ -65,11 +64,6 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             tessellator.setColorOpaque_I(40960);
 
             renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
-
-            if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
-            {
-
-            }
 
             tessellator.setColorOpaque_I(14488063);
             if (block.shouldSideBeRendered(world, x + 1, y, z, 6))

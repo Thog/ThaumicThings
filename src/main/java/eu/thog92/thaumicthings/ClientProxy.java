@@ -3,7 +3,10 @@ package eu.thog92.thaumicthings;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import eu.thog92.thaumicthings.client.render.BlockExtraLifterRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
 import thaumcraft.client.fx.ParticleEngine;
 import thaumcraft.client.fx.particles.FXSparkle;
 
@@ -38,11 +41,21 @@ public class ClientProxy extends CommonProxy
         return FMLClientHandler.instance().getClient().theWorld;
     }
 
-    public int particleCount(int base)
+    private int particleCount(int base)
     {
         if (FMLClientHandler.instance().getClient().gameSettings.particleSetting == 2)
             return 0;
-        return ((FMLClientHandler.instance().getClient().gameSettings.particleSetting == 1) ? base * 1
-                : base * 2);
+        return ((FMLClientHandler.instance().getClient().gameSettings.particleSetting == 1) ? base : base * 2);
+    }
+
+    public void onBottleBreak(Item item, World world, double x, double y, double z)
+    {
+        String s = "iconcrack_" + Item.getIdFromItem(item) + "_" + 0;
+
+        for(int k1 = 0; k1 < 8; ++k1) {
+            Minecraft.getMinecraft().renderGlobal.spawnParticle(s, x, y, z, world.rand.nextGaussian() * 0.15D, world.rand.nextDouble() * 0.2D, world.rand.nextGaussian() * 0.15D);
+        }
+
+        world.playSound(x, y, z, "game.potion.smash", 1.0F, world.rand.nextFloat() * 0.1F + 0.9F, false);
     }
 }

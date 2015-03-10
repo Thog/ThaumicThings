@@ -18,7 +18,7 @@ public class BlockMagic extends Block
     private List<IIcon> textures;
     private String[] strTextures;
 
-    public BlockMagic(Material material, String name)
+    BlockMagic(Material material, String name)
     {
         super(material);
         this.setBlockName(name);
@@ -43,7 +43,7 @@ public class BlockMagic extends Block
         return this.textures.get(side);
     }
 
-    public void setTextures(String... strTextures)
+    void setTextures(String... strTextures)
     {
         this.strTextures = strTextures;
     }
@@ -63,7 +63,7 @@ public class BlockMagic extends Block
     }
 
     @SideOnly(Side.CLIENT)
-    public IIcon getDefaultTexture()
+    IIcon getDefaultTexture()
     {
         return this.textures.get(this.textures.size() - 1);
     }
