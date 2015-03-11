@@ -3,8 +3,10 @@ package eu.thog92.thaumicthings;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import eu.thog92.thaumicthings.client.render.BlockExtraLifterRenderer;
+import eu.thog92.thaumicthings.entities.EntityBottleEthereal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import thaumcraft.client.fx.ParticleEngine;
@@ -19,6 +21,7 @@ public class ClientProxy extends CommonProxy
     {
         extraLifter = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(new BlockExtraLifterRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(EntityBottleEthereal.class, new RenderSnowball(this.bottleEthereal));
     }
 
 

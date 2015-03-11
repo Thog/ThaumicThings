@@ -51,9 +51,9 @@ public class EntityBottleEthereal extends EntityThrowable
             int entityPosY = (int)this.posY;
             int entityPosZ = (int)this.posZ;
 
-            for(int a1 = 0; a1 < 10; ++a1) {
-                int x = entityPosX + (int)((this.rand.nextFloat() - this.rand.nextFloat()) * 5.0F);
-                int z = entityPosZ + (int)((this.rand.nextFloat() - this.rand.nextFloat()) * 5.0F);
+            for(int i = 0; i < 10; ++i) {
+                int x = (int)((this.rand.nextFloat() - this.rand.nextFloat()) * 5.0F);
+                int z = (int)((this.rand.nextFloat() - this.rand.nextFloat()) * 5.0F);
                 if((this.worldObj.getBiomeGenForCoords(x + entityPosX, z + entityPosZ).biomeID == Config.biomeTaintID || this.worldObj.getBiomeGenForCoords(x + entityPosX, z + entityPosZ).biomeID == Config.biomeEerieID || this.worldObj.getBiomeGenForCoords(x + entityPosX, z + entityPosZ).biomeID == Config.biomeMagicalForestID)) {
                     BiomeGenBase[] biomesForGeneration = null;
                     biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, x + entityPosX, z + entityPosZ, 1, 1);
@@ -64,6 +64,7 @@ public class EntityBottleEthereal extends EntityThrowable
                         }
 
                         Utils.setBiomeAt(this.worldObj, x + entityPosX, z + entityPosZ, biome);
+                        worldObj.markBlockRangeForRenderUpdate();
                     }
                 }
             }
