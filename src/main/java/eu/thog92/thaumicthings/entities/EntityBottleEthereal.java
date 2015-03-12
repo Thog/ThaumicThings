@@ -64,7 +64,6 @@ public class EntityBottleEthereal extends EntityThrowable
                         }
 
                         Utils.setBiomeAt(this.worldObj, x + entityPosX, z + entityPosZ, biome);
-                        worldObj.markBlockRangeForRenderUpdate();
                     }
                 }
             }

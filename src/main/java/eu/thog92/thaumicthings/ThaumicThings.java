@@ -7,7 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "thaumicthings", version = "0.0.1", dependencies = "required-after:Thaumcraft@[4.2,)")
+@Mod(modid = "thaumicthings", version = "0.1", dependencies = "required-after:Thaumcraft@[4.2,)")
 public class ThaumicThings
 {
     @Mod.Instance(value = "thaumicthings")
