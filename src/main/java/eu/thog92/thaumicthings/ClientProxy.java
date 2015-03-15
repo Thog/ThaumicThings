@@ -55,7 +55,8 @@ public class ClientProxy extends CommonProxy
     {
         String s = "iconcrack_" + Item.getIdFromItem(item) + "_" + 0;
 
-        for(int k1 = 0; k1 < 8; ++k1) {
+        for (int k1 = 0; k1 < 8; ++k1)
+        {
             Minecraft.getMinecraft().renderGlobal.spawnParticle(s, x, y, z, world.rand.nextGaussian() * 0.15D, world.rand.nextDouble() * 0.2D, world.rand.nextGaussian() * 0.15D);
         }
 

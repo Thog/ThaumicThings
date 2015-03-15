@@ -6,6 +6,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.util.DamageSource;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "thaumicthings", version = "0.1", dependencies = "required-after:Thaumcraft@[4.2,)")
@@ -18,6 +19,8 @@ public class ThaumicThings
     public static CommonProxy proxy;
 
     public static Logger log;
+
+    public static DamageSource ethereal = new DamageSource("ethereal").setDamageBypassesArmor().setMagicDamage();
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

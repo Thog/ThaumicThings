@@ -1,18 +1,27 @@
 package eu.thog92.thaumicthings;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import eu.thog92.thaumicthings.entities.EntityBottleEthereal;
 import eu.thog92.thaumicthings.items.ItemBottleEthereal;
+import eu.thog92.thaumicthings.potions.PotionEthereal;
 import eu.thog92.thaumicthings.tiles.TileEntityExtraLifter;
 import eu.thog92.thaumicthings.utils.ReflectionHelper;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.entity.passive.*;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import org.apache.logging.log4j.Level;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import thaumcraft.api.entities.ITaintedMob;
+import thaumcraft.common.entities.monster.*;
 
 import java.io.File;
 
@@ -21,6 +30,7 @@ public class CommonProxy
 
     public static Block extraLifter;
     public static Item bottleEthereal;
+    public static Potion ethereal;
     private Configuration config;
 
     public void registerRenders()
@@ -40,18 +50,22 @@ public class CommonProxy
         int potionOffset = Potion.potionTypes.length;
 
         int potionCount = 1;
-        if(potionOffset < (128 - potionCount))
+        if (potionOffset < (128 - potionCount))
         {
-            ThaumicThings.log.trace("Extending Potion.potionTypes array to " + (potionOffset + potionCount));;
+            ThaumicThings.log.trace("Extending Potion.potionTypes array to " + (potionOffset + potionCount));
+            ;
             // Extend potions array
             Potion[] potionTypes = new Potion[potionOffset + potionCount];
             System.arraycopy(Potion.potionTypes, 0, potionTypes, 0, potionOffset);
             ReflectionHelper.setPrivateFinalWithValue(Potion.class, null, potionTypes, new String[]{"potionTypes", "field_76425_a", "a"});
         }
 
+        ethereal = new PotionEthereal(getNextPotionID(potionOffset++));
 
+        MinecraftForge.EVENT_BUS.register(this);
 
     }
+
     public void sparkle(float x, float y, float z, float size, int color, double motionX, double motionY, double motionZ)
     {
 
@@ -81,14 +95,49 @@ public class CommonProxy
         config.addCustomCategoryComment("", "");
     }
 
-    private int getNextPotionID(int start) {
-        if(Potion.potionTypes != null && start > 0 && start < Potion.potionTypes.length && Potion.potionTypes[start] == null) {
+    @SubscribeEvent
+    public void onDead(LivingDeathEvent event)
+    {
+        if (!event.entityLiving.worldObj.isRemote && event.entityLiving instanceof ITaintedMob && event.entityLiving.isPotionActive(ethereal))
+        {
+            Entity toSpawn = null;
+            if (event.entityLiving instanceof EntityTaintPig)
+                toSpawn = new EntityPig(event.entityLiving.worldObj);
+            else if (event.entityLiving instanceof EntityTaintCow)
+                toSpawn = new EntityCow(event.entityLiving.worldObj);
+            else if (event.entityLiving instanceof EntityTaintSheep)
+                toSpawn = new EntitySheep(event.entityLiving.worldObj);
+            else if (event.entityLiving instanceof EntityTaintChicken)
+                toSpawn = new EntityChicken(event.entityLiving.worldObj);
+            else if (event.entityLiving instanceof EntityTaintSpider)
+                toSpawn = new EntitySpider(event.entityLiving.worldObj);
+            else if (event.entityLiving instanceof EntityTaintCreeper)
+                toSpawn = new EntityCreeper(event.entityLiving.worldObj);
+            else if (event.entityLiving instanceof EntityTaintVillager)
+                toSpawn = new EntityVillager(event.entityLiving.worldObj);
+
+            if (toSpawn != null)
+            {
+                toSpawn.setLocationAndAngles(event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, event.entityLiving.rotationYaw, 0.0F);
+                event.entityLiving.worldObj.spawnEntityInWorld(toSpawn);
+                event.entityLiving.setDead();
+            }
+        }
+    }
+
+    private int getNextPotionID(int start)
+    {
+        if (Potion.potionTypes != null && start > 0 && start < Potion.potionTypes.length && Potion.potionTypes[start] == null)
+        {
             return start;
-        } else {
+        } else
+        {
             ++start;
-            if(start < 128) {
+            if (start < 128)
+            {
                 start = getNextPotionID(start);
-            } else {
+            } else
+            {
                 start = -1;
             }
 

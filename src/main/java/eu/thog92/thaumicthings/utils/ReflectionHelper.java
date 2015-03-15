@@ -9,15 +9,18 @@ import java.lang.reflect.Field;
  */
 public class ReflectionHelper
 {
-    public static <T, E> void setPrivateFinalWithValue(Class<? super T> c, T obj, E value, String... fieldNames) {
+    public static <T, E> void setPrivateFinalWithValue(Class<? super T> c, T obj, E value, String... fieldNames)
+    {
         Field field = cpw.mods.fml.relauncher.ReflectionHelper.findField(c, ObfuscationReflectionHelper.remapFieldNames(c.getName(), fieldNames));
 
-        try {
+        try
+        {
             Field e = Field.class.getDeclaredField("modifiers");
             e.setAccessible(true);
             e.setInt(field, field.getModifiers() & -17);
             field.set(obj, value);
-        } catch (Exception var6) {
+        } catch (Exception var6)
+        {
             var6.printStackTrace();
         }
 
