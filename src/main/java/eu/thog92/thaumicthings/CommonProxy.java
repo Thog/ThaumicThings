@@ -12,6 +12,7 @@ import eu.thog92.thaumicthings.utils.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.passive.*;
 import net.minecraft.item.Item;
@@ -24,6 +25,8 @@ import thaumcraft.api.entities.ITaintedMob;
 import thaumcraft.common.entities.monster.*;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class CommonProxy
 {
@@ -115,6 +118,27 @@ public class CommonProxy
                 toSpawn = new EntityCreeper(event.entityLiving.worldObj);
             else if (event.entityLiving instanceof EntityTaintVillager)
                 toSpawn = new EntityVillager(event.entityLiving.worldObj);
+            else if (event.entityLiving instanceof EntityThaumicSlime)
+            {
+                EntitySlime slime = new EntitySlime(event.entityLiving.worldObj);
+
+                // Restore slime size
+                try
+                {
+                    Method sizeMethod = cpw.mods.fml.relauncher.ReflectionHelper.findMethod(EntitySlime.class, slime, new String[]{"a", "func_70799_a", "setSlimeSize"}, int.class);
+                    sizeMethod.setAccessible(true);
+                    sizeMethod.invoke(slime, (int) (1.0F + Math.min(event.entityLiving.getMaxHealth() / 10.0F, 6.0F)));
+                } catch (IllegalAccessException e)
+                {
+
+                } catch (InvocationTargetException e)
+                {
+
+                }
+
+                toSpawn = slime;
+            }
+
 
             if (toSpawn != null)
             {
