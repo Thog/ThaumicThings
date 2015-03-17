@@ -11,7 +11,6 @@ import eu.thog92.thaumicthings.tiles.TileEntityExtraLifter;
 import eu.thog92.thaumicthings.utils.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -19,10 +18,8 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -110,7 +107,7 @@ public class CommonProxy
     @SubscribeEvent
     public void onDead(LivingDeathEvent event)
     {
-        if(!event.entityLiving.worldObj.isRemote)
+        if (!event.entityLiving.worldObj.isRemote)
         {
             if (event.entityLiving instanceof ITaintedMob && event.entityLiving.isPotionActive(ethereal))
             {
@@ -159,7 +156,7 @@ public class CommonProxy
                 }
             }
             // Tain Villager on death
-            else if(event.entityLiving instanceof  EntityVillager && event.source.getEntity() != null && event.source.getEntity() instanceof EntityTaintVillager)
+            else if ((event.entityLiving instanceof EntityVillager && event.source.getEntity() != null && (event.source.getEntity() instanceof EntityTaintVillager)) || (event.entityLiving instanceof EntityZombie && ((EntityZombie) event.entityLiving).isVillager()))
             {
                 EntityTaintVillager tainVillager = new EntityTaintVillager(event.entityLiving.worldObj);
                 if (tainVillager != null)
@@ -182,7 +179,7 @@ public class CommonProxy
     @SubscribeEvent
     public void onJoinWorld(EntityJoinWorldEvent event)
     {
-        if(event.entity instanceof EntityLivingBase)
+        if (event.entity instanceof EntityLivingBase)
         {
             this.onSpawn((EntityLivingBase) event.entity);
         }
@@ -191,9 +188,8 @@ public class CommonProxy
     public void onSpawn(EntityLivingBase entityLiving)
     {
         // Attack Villager and Zombies
-        if(entityLiving instanceof EntityTaintVillager)
+        if (entityLiving instanceof EntityTaintVillager)
         {
-            System.out.println(entityLiving);
             EntityTaintVillager taintVillager = ((EntityTaintVillager) entityLiving);
             taintVillager.tasks.addTask(11, new AIAttackOnCollide(taintVillager, EntityVillager.class, 1.0D, false));
             taintVillager.tasks.addTask(12, new AIAttackOnCollide(taintVillager, EntityZombie.class, 1.0D, false));
