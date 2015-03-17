@@ -27,6 +27,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import thaumcraft.api.entities.ITaintedMob;
+import thaumcraft.api.potions.PotionFluxTaint;
 import thaumcraft.common.entities.ai.combat.AIAttackOnCollide;
 import thaumcraft.common.entities.monster.*;
 
@@ -109,51 +110,18 @@ public class CommonProxy
     {
         if (!event.entityLiving.worldObj.isRemote)
         {
-            if (event.entityLiving instanceof ITaintedMob && event.entityLiving.isPotionActive(ethereal))
+
+            if (event.entityLiving instanceof ITaintedMob)
             {
-                Entity toSpawn = null;
-                if (event.entityLiving instanceof EntityTaintPig)
-                    toSpawn = new EntityPig(event.entityLiving.worldObj);
-                else if (event.entityLiving instanceof EntityTaintCow)
-                    toSpawn = new EntityCow(event.entityLiving.worldObj);
-                else if (event.entityLiving instanceof EntityTaintSheep)
-                    toSpawn = new EntitySheep(event.entityLiving.worldObj);
-                else if (event.entityLiving instanceof EntityTaintChicken)
-                    toSpawn = new EntityChicken(event.entityLiving.worldObj);
-                else if (event.entityLiving instanceof EntityTaintSpider)
-                    toSpawn = new EntitySpider(event.entityLiving.worldObj);
-                else if (event.entityLiving instanceof EntityTaintCreeper)
-                    toSpawn = new EntityCreeper(event.entityLiving.worldObj);
-                else if (event.entityLiving instanceof EntityTaintVillager)
-                    toSpawn = new EntityVillager(event.entityLiving.worldObj);
-                else if (event.entityLiving instanceof EntityThaumicSlime)
+                // Ethereal
+                if (event.entityLiving.isPotionActive(ethereal))
                 {
-                    EntitySlime slime = new EntitySlime(event.entityLiving.worldObj);
-
-                    // Restore slime size
-                    try
-                    {
-                        Method sizeMethod = cpw.mods.fml.relauncher.ReflectionHelper.findMethod(EntitySlime.class, slime, new String[]{"a", "func_70799_a", "setSlimeSize"}, int.class);
-                        sizeMethod.setAccessible(true);
-                        sizeMethod.invoke(slime, (int) (1.0F + Math.min(event.entityLiving.getMaxHealth() / 10.0F, 6.0F)));
-                    } catch (IllegalAccessException e)
-                    {
-
-                    } catch (InvocationTargetException e)
-                    {
-
-                    }
-
-                    toSpawn = slime;
+                    this.spawnOriginalLivingEntity(event.entityLiving);
+                } else if (event.entityLiving.isPotionActive(PotionFluxTaint.instance))
+                {
+                    this.spawnTaintLivingEntity(event.entityLiving);
                 }
 
-
-                if (toSpawn != null)
-                {
-                    toSpawn.setLocationAndAngles(event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, event.entityLiving.rotationYaw, 0.0F);
-                    event.entityLiving.worldObj.spawnEntityInWorld(toSpawn);
-                    event.entityLiving.setDead();
-                }
             }
             // Tain Villager on death
             else if ((event.entityLiving instanceof EntityVillager && event.source.getEntity() != null && (event.source.getEntity() instanceof EntityTaintVillager)) || (event.entityLiving instanceof EntityZombie && ((EntityZombie) event.entityLiving).isVillager()))
@@ -168,6 +136,72 @@ public class CommonProxy
             }
         }
 
+    }
+
+    private void spawnTaintLivingEntity(EntityLivingBase entityLiving)
+    {
+        Entity toSpawn = null;
+
+        //TODO: Investigate why that is not working
+        if ((entityLiving instanceof EntityZombie && ((EntityZombie) entityLiving).isVillager()))
+        {
+            toSpawn = new EntityTaintVillager(entityLiving.worldObj);
+        }
+        //More are coming...
+
+        if (toSpawn != null)
+        {
+            toSpawn.setLocationAndAngles(entityLiving.posX, entityLiving.posY, entityLiving.posZ, entityLiving.rotationYaw, 0.0F);
+            entityLiving.worldObj.spawnEntityInWorld(toSpawn);
+            entityLiving.setDead();
+        }
+    }
+
+    private void spawnOriginalLivingEntity(EntityLivingBase entityLiving)
+    {
+        Entity toSpawn = null;
+        if (entityLiving instanceof EntityTaintPig)
+            toSpawn = new EntityPig(entityLiving.worldObj);
+        else if (entityLiving instanceof EntityTaintCow)
+            toSpawn = new EntityCow(entityLiving.worldObj);
+        else if (entityLiving instanceof EntityTaintSheep)
+            toSpawn = new EntitySheep(entityLiving.worldObj);
+        else if (entityLiving instanceof EntityTaintChicken)
+            toSpawn = new EntityChicken(entityLiving.worldObj);
+        else if (entityLiving instanceof EntityTaintSpider)
+            toSpawn = new EntitySpider(entityLiving.worldObj);
+        else if (entityLiving instanceof EntityTaintCreeper)
+            toSpawn = new EntityCreeper(entityLiving.worldObj);
+        else if (entityLiving instanceof EntityTaintVillager)
+            toSpawn = new EntityVillager(entityLiving.worldObj);
+        else if (entityLiving instanceof EntityThaumicSlime)
+        {
+            EntitySlime slime = new EntitySlime(entityLiving.worldObj);
+
+            // Restore slime size
+            try
+            {
+                Method sizeMethod = cpw.mods.fml.relauncher.ReflectionHelper.findMethod(EntitySlime.class, slime, new String[]{"a", "func_70799_a", "setSlimeSize"}, int.class);
+                sizeMethod.setAccessible(true);
+                sizeMethod.invoke(slime, (int) (1.0F + Math.min(entityLiving.getMaxHealth() / 10.0F, 6.0F)));
+            } catch (IllegalAccessException e)
+            {
+
+            } catch (InvocationTargetException e)
+            {
+
+            }
+
+            toSpawn = slime;
+        }
+
+
+        if (toSpawn != null)
+        {
+            toSpawn.setLocationAndAngles(entityLiving.posX, entityLiving.posY, entityLiving.posZ, entityLiving.rotationYaw, 0.0F);
+            entityLiving.worldObj.spawnEntityInWorld(toSpawn);
+            entityLiving.setDead();
+        }
     }
 
     @SubscribeEvent
