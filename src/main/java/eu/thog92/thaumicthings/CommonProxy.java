@@ -11,17 +11,26 @@ import eu.thog92.thaumicthings.tiles.TileEntityExtraLifter;
 import eu.thog92.thaumicthings.utils.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import thaumcraft.api.entities.ITaintedMob;
+import thaumcraft.common.entities.ai.combat.AIAttackOnCollide;
 import thaumcraft.common.entities.monster.*;
 
 import java.io.File;
@@ -101,51 +110,97 @@ public class CommonProxy
     @SubscribeEvent
     public void onDead(LivingDeathEvent event)
     {
-        if (!event.entityLiving.worldObj.isRemote && event.entityLiving instanceof ITaintedMob && event.entityLiving.isPotionActive(ethereal))
+        if(!event.entityLiving.worldObj.isRemote)
         {
-            Entity toSpawn = null;
-            if (event.entityLiving instanceof EntityTaintPig)
-                toSpawn = new EntityPig(event.entityLiving.worldObj);
-            else if (event.entityLiving instanceof EntityTaintCow)
-                toSpawn = new EntityCow(event.entityLiving.worldObj);
-            else if (event.entityLiving instanceof EntityTaintSheep)
-                toSpawn = new EntitySheep(event.entityLiving.worldObj);
-            else if (event.entityLiving instanceof EntityTaintChicken)
-                toSpawn = new EntityChicken(event.entityLiving.worldObj);
-            else if (event.entityLiving instanceof EntityTaintSpider)
-                toSpawn = new EntitySpider(event.entityLiving.worldObj);
-            else if (event.entityLiving instanceof EntityTaintCreeper)
-                toSpawn = new EntityCreeper(event.entityLiving.worldObj);
-            else if (event.entityLiving instanceof EntityTaintVillager)
-                toSpawn = new EntityVillager(event.entityLiving.worldObj);
-            else if (event.entityLiving instanceof EntityThaumicSlime)
+            if (event.entityLiving instanceof ITaintedMob && event.entityLiving.isPotionActive(ethereal))
             {
-                EntitySlime slime = new EntitySlime(event.entityLiving.worldObj);
-
-                // Restore slime size
-                try
+                Entity toSpawn = null;
+                if (event.entityLiving instanceof EntityTaintPig)
+                    toSpawn = new EntityPig(event.entityLiving.worldObj);
+                else if (event.entityLiving instanceof EntityTaintCow)
+                    toSpawn = new EntityCow(event.entityLiving.worldObj);
+                else if (event.entityLiving instanceof EntityTaintSheep)
+                    toSpawn = new EntitySheep(event.entityLiving.worldObj);
+                else if (event.entityLiving instanceof EntityTaintChicken)
+                    toSpawn = new EntityChicken(event.entityLiving.worldObj);
+                else if (event.entityLiving instanceof EntityTaintSpider)
+                    toSpawn = new EntitySpider(event.entityLiving.worldObj);
+                else if (event.entityLiving instanceof EntityTaintCreeper)
+                    toSpawn = new EntityCreeper(event.entityLiving.worldObj);
+                else if (event.entityLiving instanceof EntityTaintVillager)
+                    toSpawn = new EntityVillager(event.entityLiving.worldObj);
+                else if (event.entityLiving instanceof EntityThaumicSlime)
                 {
-                    Method sizeMethod = cpw.mods.fml.relauncher.ReflectionHelper.findMethod(EntitySlime.class, slime, new String[]{"a", "func_70799_a", "setSlimeSize"}, int.class);
-                    sizeMethod.setAccessible(true);
-                    sizeMethod.invoke(slime, (int) (1.0F + Math.min(event.entityLiving.getMaxHealth() / 10.0F, 6.0F)));
-                } catch (IllegalAccessException e)
-                {
+                    EntitySlime slime = new EntitySlime(event.entityLiving.worldObj);
 
-                } catch (InvocationTargetException e)
-                {
+                    // Restore slime size
+                    try
+                    {
+                        Method sizeMethod = cpw.mods.fml.relauncher.ReflectionHelper.findMethod(EntitySlime.class, slime, new String[]{"a", "func_70799_a", "setSlimeSize"}, int.class);
+                        sizeMethod.setAccessible(true);
+                        sizeMethod.invoke(slime, (int) (1.0F + Math.min(event.entityLiving.getMaxHealth() / 10.0F, 6.0F)));
+                    } catch (IllegalAccessException e)
+                    {
 
+                    } catch (InvocationTargetException e)
+                    {
+
+                    }
+
+                    toSpawn = slime;
                 }
 
-                toSpawn = slime;
+
+                if (toSpawn != null)
+                {
+                    toSpawn.setLocationAndAngles(event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, event.entityLiving.rotationYaw, 0.0F);
+                    event.entityLiving.worldObj.spawnEntityInWorld(toSpawn);
+                    event.entityLiving.setDead();
+                }
             }
-
-
-            if (toSpawn != null)
+            // Tain Villager on death
+            else if(event.entityLiving instanceof  EntityVillager && event.source.getEntity() != null && event.source.getEntity() instanceof EntityTaintVillager)
             {
-                toSpawn.setLocationAndAngles(event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, event.entityLiving.rotationYaw, 0.0F);
-                event.entityLiving.worldObj.spawnEntityInWorld(toSpawn);
-                event.entityLiving.setDead();
+                EntityTaintVillager tainVillager = new EntityTaintVillager(event.entityLiving.worldObj);
+                if (tainVillager != null)
+                {
+                    tainVillager.setLocationAndAngles(event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, event.entityLiving.rotationYaw, 0.0F);
+                    event.entityLiving.worldObj.spawnEntityInWorld(tainVillager);
+                    event.entityLiving.setDead();
+                }
             }
+        }
+
+    }
+
+    @SubscribeEvent
+    public void onSpawn(LivingSpawnEvent event)
+    {
+        this.onSpawn(event.entityLiving);
+    }
+
+    @SubscribeEvent
+    public void onJoinWorld(EntityJoinWorldEvent event)
+    {
+        if(event.entity instanceof EntityLivingBase)
+        {
+            this.onSpawn((EntityLivingBase) event.entity);
+        }
+    }
+
+    public void onSpawn(EntityLivingBase entityLiving)
+    {
+        // Attack Villager and Zombies
+        if(entityLiving instanceof EntityTaintVillager)
+        {
+            System.out.println(entityLiving);
+            EntityTaintVillager taintVillager = ((EntityTaintVillager) entityLiving);
+            taintVillager.tasks.addTask(11, new AIAttackOnCollide(taintVillager, EntityVillager.class, 1.0D, false));
+            taintVillager.tasks.addTask(12, new AIAttackOnCollide(taintVillager, EntityZombie.class, 1.0D, false));
+
+            taintVillager.targetTasks.addTask(3, new EntityAINearestAttackableTarget(taintVillager, EntityVillager.class, 0, false));
+            taintVillager.targetTasks.addTask(3, new EntityAINearestAttackableTarget(taintVillager, EntityZombie.class, 0, false));
+
         }
     }
 
