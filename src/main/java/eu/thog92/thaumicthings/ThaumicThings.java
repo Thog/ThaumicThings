@@ -1,15 +1,17 @@
 package eu.thog92.thaumicthings;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import eu.thog92.thaumicthings.addons.betterstorage.AddonBetterStorage;
 import net.minecraft.util.DamageSource;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = "thaumicthings", version = "0.1", dependencies = "required-after:Thaumcraft@[4.2,)")
+@Mod(modid = "thaumicthings", version = "0.1", dependencies = "required-after:Thaumcraft@[4.2,); after:betterstorage;")
 public class ThaumicThings
 {
     @Mod.Instance(value = "thaumicthings")
@@ -29,6 +31,9 @@ public class ThaumicThings
         proxy.loadConfiguration(event.getSuggestedConfigurationFile());
         proxy.initContents();
         proxy.registerRenders();
+
+        if (Loader.isModLoaded("betterstorage"))
+            AddonBetterStorage.preInit();
 
     }
 

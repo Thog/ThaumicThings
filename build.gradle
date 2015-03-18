@@ -22,6 +22,10 @@ repositories {
         name "ChickenBones"
         url "http://chickenbones.net/maven/"
     }
+    maven {
+        name "rx14"
+        url "http://mvn.rx14.co.uk/repo/"
+    }
     ivy {
         name "Thaumcraft"
         artifactPattern "https://dl.dropboxusercontent.com/u/47135879/[module]-([classifier]-)[revision].[ext]"
@@ -43,6 +47,7 @@ minecraft {
 dependencies {
     compile name: "Baubles", version: baublesVersion, classifier: "deobf"
     compile name: "Thaumcraft", version: thaumcraftVersion, classifier: "deobf"
+    compile 'net.mcft.copy.betterstorage:BetterStorage:1.7.10-0.11.3.123.20:deobf'
 }
 
 processResources
