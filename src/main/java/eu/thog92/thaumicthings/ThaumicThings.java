@@ -30,10 +30,10 @@ public class ThaumicThings
         log = event.getModLog();
         proxy.loadConfiguration(event.getSuggestedConfigurationFile());
         proxy.initContents();
-        proxy.registerRenders();
-
         if (Loader.isModLoaded("betterstorage"))
             AddonBetterStorage.preInit();
+
+        proxy.registerRenders();
 
     }
 

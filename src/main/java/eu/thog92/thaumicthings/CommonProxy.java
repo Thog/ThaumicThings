@@ -1,8 +1,10 @@
 package eu.thog92.thaumicthings;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import eu.thog92.thaumicthings.addons.betterstorage.AddonBetterStorage;
 import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import eu.thog92.thaumicthings.entities.EntityBottleEthereal;
 import eu.thog92.thaumicthings.items.ItemBottleEthereal;
@@ -73,6 +75,9 @@ public class CommonProxy
         ethereal = new PotionEthereal(getNextPotionID(potionOffset++));
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        if (Loader.isModLoaded("betterstorage"))
+            AddonBetterStorage.initRenders();
 
     }
 

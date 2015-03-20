@@ -1,6 +1,8 @@
 package eu.thog92.thaumicthings.addons.betterstorage;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.mcft.copy.betterstorage.tile.TileReinforcedChest;
 import net.mcft.copy.betterstorage.tile.entity.TileEntityReinforcedChest;
 import net.mcft.copy.betterstorage.utils.WorldUtils;
@@ -10,6 +12,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import thaumcraft.common.Thaumcraft;
 import thaumcraft.common.lib.utils.InventoryUtils;
@@ -33,24 +36,6 @@ public class TileReinforcedHungryChest extends TileReinforcedChest
         return ItemHungryChest.class;
     }
 
-    public String getTileName()
-    {
-        return "reinforcedChest";
-    }
-
-    @Override
-    protected void registerBlock()
-    {
-        Class<? extends Item> itemClass = getItemClass();
-
-        if (itemClass != null)
-        {
-            GameRegistry.registerBlock(this, (Class<? extends ItemBlock>) itemClass, super.getTileName());
-        } else
-        {
-            GameRegistry.registerBlock(this, null, super.getTileName());
-        }
-    }
 
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
@@ -79,5 +64,18 @@ public class TileReinforcedHungryChest extends TileReinforcedChest
                 tileEntity.markDirty();
             }
         }
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int metadata) {
+        return new TileEntityReinforcedHungryChest();
+    }
+
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderType()
+    {
+        return AddonBetterStorage.hungryReinforcedChestRenderID;
     }
 }
