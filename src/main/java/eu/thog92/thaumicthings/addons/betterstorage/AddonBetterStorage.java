@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.mcft.copy.betterstorage.client.renderer.ItemRendererContainer;
 import net.mcft.copy.betterstorage.client.renderer.TileEntityReinforcedChestRenderer;
 import net.mcft.copy.betterstorage.proxy.ClientProxy;
-import net.mcft.copy.betterstorage.tile.entity.TileEntityReinforcedChest;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;

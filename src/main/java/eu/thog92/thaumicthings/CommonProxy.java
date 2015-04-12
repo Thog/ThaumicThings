@@ -65,7 +65,7 @@ public class CommonProxy
         if (potionOffset < (128 - potionCount))
         {
             ThaumicThings.log.trace("Extending Potion.potionTypes array to " + (potionOffset + potionCount));
-            ;
+
             // Extend potions array
             Potion[] potionTypes = new Potion[potionOffset + potionCount];
             System.arraycopy(Potion.potionTypes, 0, potionTypes, 0, potionOffset);

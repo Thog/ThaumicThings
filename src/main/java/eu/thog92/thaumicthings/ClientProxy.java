@@ -21,7 +21,7 @@ public class ClientProxy extends CommonProxy
     {
         extraLifter = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(new BlockExtraLifterRenderer());
-        RenderingRegistry.registerEntityRenderingHandler(EntityBottleEthereal.class, new RenderSnowball(this.bottleEthereal));
+        RenderingRegistry.registerEntityRenderingHandler(EntityBottleEthereal.class, new RenderSnowball(bottleEthereal));
     }
 
 

@@ -52,18 +52,27 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
         if (tileLifter.isDisabled()) return;
         float modifier = tileLifter.isReverted() ? 3.0F : 0.0F;
         int metadata = world.getBlockMetadata(x, y, z);
-        if (metadata == 0)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F - modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * -0.3F, 0);
-        else if (metadata == 1)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F + modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * 0.3F, 0);
-        else if (metadata == 2)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F - modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * -0.3F);
-        else if (metadata == 3)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * 0.3F);
-        else if (metadata == 4)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F - modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * -0.3F, 0, 0);
-        else if (metadata == 5)
-            ThaumicThings.proxy.sparkle((float) x + 0.2F + modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * 0.3F, 0, 0);
+        switch (metadata)
+        {
+            default:
+                ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F - modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * -0.3F, 0);
+                break;
+            case 1:
+                ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F + modifier, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, 0, directionModifer * 0.3F, 0);
+                break;
+            case 2:
+                ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F - modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * -0.3F);
+                break;
+            case 3:
+                ThaumicThings.proxy.sparkle((float) x + 0.2F + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + modifier + r.nextFloat() * 0.6F, 1.0F, 3, 0, 0, directionModifer * 0.3F);
+                break;
+            case 4:
+                ThaumicThings.proxy.sparkle((float) x + 0.2F - modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * -0.3F, 0, 0);
+                break;
+            case 5:
+                ThaumicThings.proxy.sparkle((float) x + 0.2F + modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 3, directionModifer * 0.3F, 0, 0);
+                break;
+        }
     }
 
     @SideOnly(Side.CLIENT)
