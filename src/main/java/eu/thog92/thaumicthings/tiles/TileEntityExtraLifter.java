@@ -48,7 +48,6 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
     public void updateEntity()
     {
         super.updateEntity();
-
         this.counter += 1;
         if ((this.requiresUpdate) || (this.counter % 100 == 0))
         {
@@ -72,7 +71,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
 
             this.rangeAbove = 0;
-            while ((this.rangeAbove < max) && (!(this.getNeighborBlock(-1 - this.rangeAbove).isOpaqueCube())))
+            while ((this.rangeAbove < max) && (!(this.getNeighborBlock(-this.rangeAbove - 1).isOpaqueCube())))
             {
                 this.rangeAbove += 1;
             }
@@ -85,23 +84,23 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
 
             if (blockMetadata == 0)
             {
-                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - this.rangeAbove, this.zCoord, this.xCoord + 1, this.yCoord, this.zCoord + 1);
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord - this.rangeAbove, this.zCoord, this.xCoord + 1, this.yCoord - 1, this.zCoord + 1);
             } else if (blockMetadata == 2)
             {
-                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord - this.rangeAbove, this.xCoord + 1, this.yCoord + 1, this.zCoord);
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord - this.rangeAbove, this.xCoord + 1, this.yCoord + 1, this.zCoord - 1);
             } else if (blockMetadata == 3)
             {
-                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + this.rangeAbove);
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord + 1, this.xCoord + 1, this.yCoord + 1, this.zCoord + this.rangeAbove);
             } else if (blockMetadata == 4)
             {
-                aabb = AxisAlignedBB.getBoundingBox(this.xCoord - this.rangeAbove, this.yCoord, this.zCoord, this.xCoord, this.yCoord + 1, this.zCoord + 1);
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord - this.rangeAbove, this.yCoord, this.zCoord, this.xCoord - 1, this.yCoord + 1, this.zCoord + 1);
             } else if (blockMetadata == 5)
             {
-                aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + this.rangeAbove, this.yCoord + 1, this.zCoord + 1);
+                aabb = AxisAlignedBB.getBoundingBox(this.xCoord + 1, this.yCoord, this.zCoord, this.xCoord + this.rangeAbove, this.yCoord + 1, this.zCoord + 1);
             } else
             {
                 aabb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 1,
-                        this.zCoord, this.xCoord + 1, this.yCoord + 1
+                        this.zCoord, this.xCoord + 1, this.yCoord
                                 + this.rangeAbove, this.zCoord + 1);
             }
 
@@ -204,6 +203,7 @@ public class TileEntityExtraLifter extends TileThaumcraft implements IWandable
         } else
         {
             this.setInvert(!reverted);
+            world.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
         }
         return 0;
     }

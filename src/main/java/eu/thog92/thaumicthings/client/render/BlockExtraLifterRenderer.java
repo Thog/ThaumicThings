@@ -48,19 +48,21 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
         renderer.renderStandardBlock(block, x, y, z);
 
         int brightness = 180;
+        int color = 0xFFF;
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile != null && tile instanceof TileEntityExtraLifter)
         {
             TileEntityExtraLifter lifterTile = (TileEntityExtraLifter) tile;
             if (lifterTile.isDisabled())
                 brightness = 0;
+            color = lifterTile.isReverted() ? 0x5f0000 : 0xa000;
         }
 
         // Liquids render
         tessellator.setBrightness(brightness);
         if (metadata == 0)
         {
-            tessellator.setColorOpaque_I(40960);
+            tessellator.setColorOpaque_I(color);
             renderer.renderFaceYNeg(block, (double) x, (double) ((float) y + 0.01F), (double) z, block.getTexture(3));
 
             tessellator.setColorOpaque_I(14488063);
@@ -85,7 +87,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             }
         } else if (metadata == 2)
         {
-            tessellator.setColorOpaque_I(40960);
+            tessellator.setColorOpaque_I(color);
             if (block.shouldSideBeRendered(world, x, y, z - 1, 6))
             {
                 renderer.renderFaceZNeg(block, (double) x, (double) y, (double) ((float) z + 0.01F), block.getTexture(3));
@@ -113,7 +115,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
 
         } else if (metadata == 3)
         {
-            tessellator.setColorOpaque_I(40960);
+            tessellator.setColorOpaque_I(color);
             if (block.shouldSideBeRendered(world, x, y, z + 1, 6))
             {
                 renderer.renderFaceZPos(block, (double) x, (double) y, (double) ((float) z - 0.01F), block.getTexture(3));
@@ -141,7 +143,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             }
         } else if (metadata == 4)
         {
-            tessellator.setColorOpaque_I(40960);
+            tessellator.setColorOpaque_I(color);
             if (block.shouldSideBeRendered(world, x - 1, y, z, 6))
             {
                 renderer.renderFaceXNeg(block, (double) ((float) x + 0.01F), (double) y, (double) z, block.getTexture(3));
@@ -169,7 +171,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
 
         } else if (metadata == 5)
         {
-            tessellator.setColorOpaque_I(40960);
+            tessellator.setColorOpaque_I(color);
             if (block.shouldSideBeRendered(world, x + 1, y, z, 6))
             {
                 renderer.renderFaceXPos(block, (double) ((float) x - 0.01F), (double) y, (double) z, block.getTexture(3));
@@ -196,7 +198,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
             }
         } else
         {
-            tessellator.setColorOpaque_I(40960);
+            tessellator.setColorOpaque_I(color);
             if (block.shouldSideBeRendered(world, x, y + 1, z, 6))
             {
                 renderer.renderFaceYPos(block, (double) x, (double) ((float) y - 0.01F), (double) z, block.getTexture(3));
@@ -241,7 +243,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
         block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         renderer.setRenderBoundsFromBlock(block);
         this.drawQuadsWithBlock(renderer, block, 1);
-        Color color = new Color(40960); // Default Thaumcraft Color
+        Color color = new Color(0xa000); // Default Thaumcraft Color
         GL11.glColor3f((float) color.getRed() / 255.0F, (float) color.getGreen() / 255.0F, (float) color.getBlue() / 255.0F);
         block.setBlockBounds(0.01F, 0.9F, 0.01F, 0.99F, 0.99F, 0.99F);
         renderer.setRenderBoundsFromBlock(block);
