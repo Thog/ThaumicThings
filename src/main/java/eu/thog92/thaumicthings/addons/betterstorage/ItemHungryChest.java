@@ -21,15 +21,14 @@ public class ItemHungryChest extends ItemLockable
     }
 
     @Override
-    public String getItemStackDisplayName(ItemStack stack)
-    {
-        if (!((TileLockable) Block.getBlockFromItem(stack.getItem())).hasMaterial())
+    public String getItemStackDisplayName(ItemStack stack) {
+        if (!((TileLockable)Block.getBlockFromItem(stack.getItem())).hasMaterial())
             return super.getItemStackDisplayName(stack);
 
         ContainerMaterial material = ContainerMaterial.getMaterial(stack, ContainerMaterial.iron);
 
         String name = StatCollector.translateToLocal(getUnlocalizedName(stack) + ".name.full");
-        String materialName = StatCollector.translateToLocal("material.betterstorage." + material.name);
+        String materialName = StatCollector.translateToLocal("material." + net.mcft.copy.betterstorage.misc.Constants.modId + "." + material.name);
         return name.replace("%MATERIAL%", materialName);
     }
 }

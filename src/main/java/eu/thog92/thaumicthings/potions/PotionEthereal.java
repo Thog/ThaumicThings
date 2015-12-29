@@ -41,7 +41,7 @@ public class PotionEthereal extends Potion
     {
         if (target instanceof ITaintedMob)
         {
-            target.attackEntityFrom(ThaumicThings.ethereal, 1.0F);
+            target.attackEntityFrom(ThaumicThings.ETHEREAL, 1.0F);
         }
     }
 

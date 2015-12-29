@@ -11,7 +11,7 @@ import eu.thog92.thaumicthings.addons.betterstorage.AddonBetterStorage;
 import net.minecraft.util.DamageSource;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = "thaumicthings", version = "0.1", dependencies = "required-after:Thaumcraft@[4.2,); after:betterstorage;")
+@Mod(modid = ThaumicThings.MODID, version = ThaumicThings.VERSION, dependencies = "required-after:Thaumcraft@[4.2,); after:betterstorage;")
 public class ThaumicThings
 {
     @Mod.Instance(value = "thaumicthings")
@@ -22,7 +22,10 @@ public class ThaumicThings
 
     public static Logger log;
 
-    public static DamageSource ethereal = new DamageSource("ethereal").setDamageBypassesArmor().setMagicDamage();
+    public static final DamageSource ETHEREAL = new DamageSource("ethereal").setDamageBypassesArmor().setMagicDamage();
+
+    public static final String MODID = "thaumicthings";
+    public static final String VERSION = "%VERSION%";
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

@@ -2,6 +2,7 @@ package eu.thog92.thaumicthings.addons.betterstorage;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import eu.thog92.thaumicthings.ThaumicThings;
 import net.mcft.copy.betterstorage.tile.TileReinforcedChest;
 import net.mcft.copy.betterstorage.tile.entity.TileEntityReinforcedChest;
 import net.mcft.copy.betterstorage.utils.WorldUtils;
@@ -20,6 +21,7 @@ public class TileReinforcedHungryChest extends TileReinforcedChest
     public TileReinforcedHungryChest(Material material)
     {
         super(material);
+        this.setBlockName(ThaumicThings.MODID + this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf("tile.betterstorage") + "tile.betterstorage".length()));
         this.setCreativeTab(Thaumcraft.tabTC);
     }
 
