@@ -10,7 +10,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
-public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHandler
+public abstract class BlockRenderingHandler<E extends BlockMagic> implements ISimpleBlockRenderingHandler
 {
 
     protected Tessellator tessellator;
@@ -24,22 +24,22 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
     public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
     {
         this.tessellator = Tessellator.instance;
-        this.renderInventoryBlock((BlockMagic) block, metadata, modelId, renderer);
+        this.renderInventoryBlock((E) block, metadata, modelId, renderer);
     }
 
     @Override
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
     {
         this.tessellator = Tessellator.instance;
-        return renderWorldBlock(world, x, y, z, (BlockMagic) block, modelId, renderer);
+        return renderWorldBlock(world, x, y, z, (E) block, modelId, renderer);
     }
 
-    protected abstract boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, BlockMagic block, int modelId, RenderBlocks renderer);
+    protected abstract boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, E block, int modelId, RenderBlocks renderer);
 
-    protected abstract void renderInventoryBlock(BlockMagic block, int metadata, int modelId, RenderBlocks renderer);
+    protected abstract void renderInventoryBlock(E block, int metadata, int modelId, RenderBlocks renderer);
 
 
-    void drawQuadsWithBlock(RenderBlocks renderer, BlockMagic block, int metadata)
+    void drawQuadsWithBlock(RenderBlocks renderer, E block, int metadata)
     {
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();
@@ -71,7 +71,7 @@ public abstract class BlockRenderingHandler implements ISimpleBlockRenderingHand
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
     }
 
-    void drawAllCube(RenderBlocks renderer, BlockMagic block, IIcon texture)
+    void drawAllCube(RenderBlocks renderer, E block, IIcon texture)
     {
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
         tessellator.startDrawingQuads();

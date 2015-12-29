@@ -1,6 +1,7 @@
 package eu.thog92.thaumicthings.client.render;
 
 import eu.thog92.thaumicthings.ClientProxy;
+import eu.thog92.thaumicthings.blocks.BlockExtraLifter;
 import eu.thog92.thaumicthings.blocks.BlockMagic;
 import eu.thog92.thaumicthings.tiles.TileEntityExtraLifter;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -10,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-public class BlockExtraLifterRenderer extends BlockRenderingHandler
+public class BlockExtraLifterRenderer extends BlockRenderingHandler<BlockExtraLifter>
 {
 
     @Override
@@ -26,7 +27,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
     }
 
     @Override
-    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, BlockMagic block, int modelId, RenderBlocks renderer)
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, BlockExtraLifter block, int modelId, RenderBlocks renderer)
     {
         GL11.glPushMatrix();
 
@@ -238,7 +239,7 @@ public class BlockExtraLifterRenderer extends BlockRenderingHandler
     }
 
     @Override
-    public void renderInventoryBlock(BlockMagic block, int metadata, int modelId, RenderBlocks renderer)
+    public void renderInventoryBlock(BlockExtraLifter block, int metadata, int modelId, RenderBlocks renderer)
     {
         block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         renderer.setRenderBoundsFromBlock(block);

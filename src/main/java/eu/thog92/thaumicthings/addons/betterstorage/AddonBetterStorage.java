@@ -20,12 +20,12 @@ public class AddonBetterStorage
     {
         GameRegistry.registerTileEntity(TileEntityReinforcedHungryChest.class, "ReinforcedHungryChest");
         hungryReinforcedChest = new TileReinforcedHungryChest();
-        hungryReinforcedChestRenderID = ClientProxy.registerTileEntityRenderer(TileEntityReinforcedHungryChest.class, new TileEntityReinforcedChestRenderer());
     }
 
     @SideOnly(Side.CLIENT)
     public static void initRenders()
     {
+        hungryReinforcedChestRenderID = ClientProxy.registerTileEntityRenderer(TileEntityReinforcedHungryChest.class, new TileEntityReinforcedChestRenderer());
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(hungryReinforcedChest), new ItemRendererContainer(TileEntityReinforcedHungryChest.class));
     }
 }

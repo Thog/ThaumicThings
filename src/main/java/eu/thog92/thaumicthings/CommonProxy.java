@@ -1,5 +1,6 @@
 package eu.thog92.thaumicthings;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -12,16 +13,26 @@ import eu.thog92.thaumicthings.potions.PotionEthereal;
 import eu.thog92.thaumicthings.tiles.TileEntityExtraLifter;
 import eu.thog92.thaumicthings.utils.ReflectionHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorProjectileDispense;
+import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -30,12 +41,16 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import thaumcraft.api.entities.ITaintedMob;
 import thaumcraft.api.potions.PotionFluxTaint;
+import thaumcraft.common.Thaumcraft;
+import thaumcraft.common.config.ConfigItems;
 import thaumcraft.common.entities.ai.combat.AIAttackOnCollide;
 import thaumcraft.common.entities.monster.*;
+import thaumcraft.common.entities.projectile.EntityBottleTaint;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 public class CommonProxy
 {
@@ -76,9 +91,43 @@ public class CommonProxy
 
         MinecraftForge.EVENT_BUS.register(this);
 
-        if (Loader.isModLoaded("betterstorage"))
-            AddonBetterStorage.initRenders();
+        BlockDispenser.dispenseBehaviorRegistry.putObject(ConfigItems.itemBottleTaint, new BehaviorProjectileDispense()
+        {
+            @Override
+            protected IProjectile getProjectileEntity(World world, IPosition position)
+            {
+                EntityPlayer fake = new EntityPlayer(world, new GameProfile(UUID.randomUUID(), "Potion"))
+                {
+                    @Override
+                    public void addChatMessage(IChatComponent p_145747_1_)
+                    {
 
+                    }
+
+                    @Override
+                    public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_)
+                    {
+                        return false;
+                    }
+
+                    @Override
+                    public ChunkCoordinates getPlayerCoordinates()
+                    {
+                        return new ChunkCoordinates(0, 0, 0);
+                    }
+                };
+                fake.setPosition(position.getX(), position.getY(), position.getZ());
+                return new EntityBottleTaint(world, fake);
+            }
+        });
+        BlockDispenser.dispenseBehaviorRegistry.putObject(bottleEthereal, new BehaviorProjectileDispense()
+        {
+            @Override
+            protected IProjectile getProjectileEntity(World world, IPosition position)
+            {
+                return new EntityBottleEthereal(world, position.getX(), position.getY(), position.getZ());
+            }
+        });
     }
 
     public void sparkle(float x, float y, float z, float size, int color, double motionX, double motionY, double motionZ)

@@ -71,7 +71,7 @@ public class BlockExtraLifter extends BlockMagic implements ITileEntityProvider
                 ThaumicThings.proxy.sparkle((float) x + 0.2F - modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, color, directionModifer * -0.3F, 0, 0);
                 break;
             case 5:
-                ThaumicThings.proxy.sparkle((float) x + 0.2F + modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, 2, directionModifer * 0.3F, 0, 0);
+                ThaumicThings.proxy.sparkle((float) x + 0.2F + modifier + r.nextFloat() * 0.6F, y + 0.5F, (float) z + 0.2F + r.nextFloat() * 0.6F, 1.0F, color, directionModifer * 0.3F, 0, 0);
                 break;
         }
     }

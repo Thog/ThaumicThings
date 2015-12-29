@@ -32,6 +32,11 @@ public class EntityBottleEthereal extends EntityThrowable
         super(world, player);
     }
 
+    public EntityBottleEthereal(World world, double x, double y, double z)
+    {
+        super(world, x, y, z);
+    }
+
     protected float getGravityVelocity()
     {
         return 0.05F;

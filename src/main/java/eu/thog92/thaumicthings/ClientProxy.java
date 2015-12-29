@@ -2,6 +2,8 @@ package eu.thog92.thaumicthings;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Loader;
+import eu.thog92.thaumicthings.addons.betterstorage.AddonBetterStorage;
 import eu.thog92.thaumicthings.client.render.BlockExtraLifterRenderer;
 import eu.thog92.thaumicthings.entities.EntityBottleEthereal;
 import net.minecraft.client.Minecraft;
@@ -22,6 +24,8 @@ public class ClientProxy extends CommonProxy
         extraLifter = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(new BlockExtraLifterRenderer());
         RenderingRegistry.registerEntityRenderingHandler(EntityBottleEthereal.class, new RenderSnowball(bottleEthereal));
+        if (Loader.isModLoaded("betterstorage"))
+            AddonBetterStorage.initRenders();
     }
 
 

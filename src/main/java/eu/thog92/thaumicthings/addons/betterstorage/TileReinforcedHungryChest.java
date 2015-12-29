@@ -40,7 +40,7 @@ public class TileReinforcedHungryChest extends TileReinforcedChest
     {
         TileEntityReinforcedChest tileEntity = WorldUtils.get(world, x, y, z, TileEntityReinforcedChest.class);
 
-        if (tileEntity != null && !world.isRemote)
+        if (tileEntity != null)
         {
             if (entity instanceof EntityItem && !entity.isDead)
             {
@@ -48,7 +48,7 @@ public class TileReinforcedHungryChest extends TileReinforcedChest
                 if (stack == null || stack.stackSize != ((EntityItem) entity).getEntityItem().stackSize)
                 {
                     world.playSoundAtEntity(entity, "random.eat", 0.25F, (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F + 1.0F);
-                    tileEntity.lidAngle = 1.0F;
+                    tileEntity.lidAngle = 0.5F;
                 }
 
                 if (stack != null)
